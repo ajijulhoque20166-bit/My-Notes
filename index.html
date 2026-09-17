@@ -1,139 +1,358 @@
 <!DOCTYPE html>
-<html>
+<html lang="bn">
+
 <head>
-  <meta charset="utf-8">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Robots Battle</title>
+<title>My Notes</title>
 
-  <!--http://www.html5rocks.com/en/mobile/mobifying/-->
-  <meta name="viewport"
-        content="width=device-width,user-scalable=no,initial-scale=1, minimum-scale=1,maximum-scale=1"/>
+<link rel="icon" type="image/png" href="icon.png">
 
-  <!--https://developer.apple.com/library/safari/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html-->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="format-detection" content="telephone=no">
+<style>
 
-  <!-- force webkit on 360 -->
-  <meta name="renderer" content="webkit"/>
-  <meta name="force-rendering" content="webkit"/>
-  <!-- force edge on IE -->
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-  <meta name="msapplication-tap-highlight" content="no">
+* {
+  box-sizing: border-box;
+}
 
-  <!-- force full screen on some browser -->
-  <meta name="full-screen" content="yes"/>
-  <meta name="x5-fullscreen" content="true"/>
-  <meta name="360-fullscreen" content="true"/>
-  
-  <!-- force screen orientation on some browser -->
-  <meta name="screen-orientation" content="landscape"/>
-  <meta name="x5-orientation" content="landscape">
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f2f4f7;
+  color: #222;
+}
 
-  <!--fix fireball/issues/3568 -->
-  <!--<meta name="browsermode" content="application">-->
-  <meta name="x5-page-mode" content="app">
+header {
+  background: #222;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
 
-  <!--<link rel="apple-touch-icon" href=".png" />-->
-  <!--<link rel="apple-touch-icon-precomposed" href=".png" />-->
+header h1 {
+  margin: 0 0 10px;
+}
 
-  <link rel="stylesheet" type="text/css" href="style-mobile.css"/>
-  <link rel="icon" href="favicon.ico"/>
-  <link rel="stylesheet" type="text/css" href="xsdk/base.css"/>
-  <link rel="stylesheet" type="text/css" href="xsdk/notifiers.css"/>
-  <script src="xsdk/config.js"></script>
-  <script async
-          data-ad-frequency-hint="30s"
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1073974549108533"
-          crossorigin="anonymous"
-          onload="window.afgScriptLoaded=true">
-  </script>
+.container {
+  max-width: 600px;
+  margin: auto;
+  padding: 15px;
+}
+
+input,
+textarea {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 16px;
+  outline: none;
+}
+
+textarea {
+  height: 150px;
+  resize: none;
+}
+
+button {
+  border: none;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.add {
+  width: 100%;
+  background: #222;
+  color: white;
+  margin-bottom: 15px;
+}
+
+.save {
+  width: 100%;
+  background: #16834b;
+  color: white;
+}
+
+.search {
+  margin-top: 10px;
+}
+
+.note {
+  background: white;
+  margin-top: 15px;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px #ccc;
+}
+
+.note h3 {
+  margin-top: 0;
+}
+
+.note p {
+  white-space: pre-wrap;
+}
+
+.edit {
+  background: #ddd;
+  margin-right: 5px;
+}
+
+.delete {
+  background: #d33;
+  color: white;
+}
+
+.dark {
+  background: #181818;
+  color: white;
+}
+
+.dark .note {
+  background: #292929;
+  color: white;
+}
+
+.dark input,
+.dark textarea {
+  background: #292929;
+  color: white;
+  border-color: #555;
+}
+
+.dark .edit {
+  background: #555;
+  color: white;
+}
+
+.dark header {
+  background: #000;
+}
+
+#editor {
+  display: none;
+}
+
+</style>
 </head>
+
 <body>
-<script src="xsdk/spinner.js"></script>
-<script src="xsdk/xsdk-pt.min.js"></script>
-<div id="my-loading-overlay" class="my-loading-overlay" style="display: none">
-  <div id="my-loading" class="my-loading"><span id="my-loading-text" class="title"></span></div>
+
+<header>
+
+<h1>📝 My Notes</h1>
+
+<button onclick="darkMode()">
+🌙 Dark Mode
+</button>
+
+</header>
+
+<div class="container">
+
+<button class="add" onclick="openEditor()">
+➕ Add New Note
+</button>
+
+<div id="editor">
+
+<input
+id="titleInput"
+type="text"
+placeholder="Note-এর Title লিখুন">
+
+<textarea
+id="textInput"
+placeholder="আপনার Note লিখুন...">
+</textarea>
+
+<button class="save" onclick="saveNote()">
+💾 Save Note
+</button>
+
 </div>
-<div id="my-toast" class="my-toast hidden"></div>
-  <canvas id="GameCanvas" oncontextmenu="event.preventDefault()" tabindex="0"></canvas>
-  <div id="splash">
-    <span id="loading-text"></span>
-    <div class="progress-bar stripes">
-      <span style="width: 0%"></span>
-    </div>
-  </div>
+
+<input
+class="search"
+id="search"
+type="text"
+placeholder="🔍 Note খুঁজুন..."
+oninput="showNotes()">
+
+<div id="notes"></div>
+
+</div>
+
 <script>
-  window.xSDK.init(xSDKConf);
-  let interval1;
-  {
-    let arr = [
-      'There are attractive game mode, like 1v1 steel mech battle, peak mech arena and boss challenge.',
-      'As a good mech pilot, you need to be familiar with the combat skills of different mech robot.',
-      '🤖Each mech has two forms. Powerful awakened abilities can be obtained by unlocking the form of armored beasts.',
-      '😈BOSS mode is very challenging in robot games, please make sure to bring your strongest mecha robot to challenge!',
-      'Challenging 1v1 & pvp arena mode',
-      'Exciting gameplay with Amazing graphics for robot games.',
-      'Multiple ways to get gifts: 7-day check in, Daily tasks, etc.',
-      'Use every strategy you can imagine, to frag, to conquer the enemy robot in 1v1 battle!',
-    ];
-    let e = document.getElementById('loading-text');
-    e.textContent = 'This game takes a while to start up the first time.';
-    let bar = document.getElementById('splash').querySelector('.progress-bar span');
-    setTimeout(function() {
-      bar.style.width = '100%';
-    }, 1000);
-    let i = 0;
-    interval1 = setInterval(function() {
-      if (i >= arr.length) i = 0;
-      e.textContent = arr[i++];
-      bar.classList.add('reset');
-      bar.style.width = '0%';
-      setTimeout(function() {
-        bar.classList.remove('reset');
-        bar.style.width = '100%';
-      }, 1000);
-    }, 6000);
+
+let editIndex = -1;
+
+function openEditor() {
+
+  document.getElementById("editor")
+  .style.display = "block";
+
+  document.getElementById("titleInput")
+  .focus();
+}
+
+function saveNote() {
+
+  let title =
+  document.getElementById("titleInput").value;
+
+  let text =
+  document.getElementById("textInput").value;
+
+  if (title.trim() === "" &&
+      text.trim() === "") {
+
+    alert("আগে Note লিখুন!");
+    return;
   }
-</script>
 
-<script src="src/settings.js" charset="utf-8"></script>
+  let notes =
+  JSON.parse(localStorage.getItem("notes"))
+  || [];
 
-<script src="main.js" charset="utf-8"></script>
+  let newNote = {
+    title: title,
+    text: text
+  };
 
-<script type="text/javascript">
-(function () {
-    // open web debugger console
-    if (typeof VConsole !== 'undefined') {
-        window.vConsole = new VConsole();
+  if (editIndex === -1) {
+    notes.push(newNote);
+  } else {
+    notes[editIndex] = newNote;
+    editIndex = -1;
+  }
+
+  localStorage.setItem(
+    "notes",
+    JSON.stringify(notes)
+  );
+
+  document.getElementById("titleInput")
+  .value = "";
+
+  document.getElementById("textInput")
+  .value = "";
+
+  document.getElementById("editor")
+  .style.display = "none";
+
+  showNotes();
+}
+
+function showNotes() {
+
+  let notes =
+  JSON.parse(localStorage.getItem("notes"))
+  || [];
+
+  let search =
+  document.getElementById("search")
+  .value.toLowerCase();
+
+  let container =
+  document.getElementById("notes");
+
+  container.innerHTML = "";
+
+  notes.forEach(function(note, index) {
+
+    let title =
+    (note.title || "").toLowerCase();
+
+    let text =
+    (note.text || "").toLowerCase();
+
+    if (
+      title.includes(search) ||
+      text.includes(search)
+    ) {
+
+      container.innerHTML += `
+
+      <div class="note">
+
+        <h3>📌 ${note.title}</h3>
+
+        <p>${note.text}</p>
+
+        <button
+        class="edit"
+        onclick="editNote(${index})">
+        ✏️ Edit
+        </button>
+
+        <button
+        class="delete"
+        onclick="deleteNote(${index})">
+        🗑️ Delete
+        </button>
+
+      </div>
+
+      `;
     }
 
-    var debug = window._CCSettings.debug;
-    var splash = document.getElementById('splash');
-    splash.style.display = 'block';
+  });
 
-    function loadScript (moduleName, cb) {
-      function scriptLoaded () {
-          document.body.removeChild(domScript);
-          domScript.removeEventListener('load', scriptLoaded, false);
-          cb && cb();
-      };
-      var domScript = document.createElement('script');
-      domScript.async = true;
-      domScript.src = moduleName;
-      domScript.addEventListener('load', scriptLoaded, false);
-      document.body.appendChild(domScript);
-    }
+}
 
-    loadScript(debug ? 'cocos2d-js.js' : 'cocos2d-js-min.js', function () {
-      if (CC_PHYSICS_BUILTIN || CC_PHYSICS_CANNON) {
-        loadScript(debug ? 'physics.js' : 'physics-min.js', window.boot);
-      }
-      else {
-        window.boot();
-      }
-    });
-})();
+function editNote(index) {
+
+  let notes =
+  JSON.parse(localStorage.getItem("notes"))
+  || [];
+
+  document.getElementById("titleInput")
+  .value = notes[index].title;
+
+  document.getElementById("textInput")
+  .value = notes[index].text;
+
+  editIndex = index;
+
+  document.getElementById("editor")
+  .style.display = "block";
+
+  window.scrollTo(0, 0);
+}
+
+function deleteNote(index) {
+
+  if (!confirm("এই Note Delete করবেন?")) {
+    return;
+  }
+
+  let notes =
+  JSON.parse(localStorage.getItem("notes"))
+  || [];
+
+  notes.splice(index, 1);
+
+  localStorage.setItem(
+    "notes",
+    JSON.stringify(notes)
+  );
+
+  showNotes();
+}
+
+function darkMode() {
+
+  document.body.classList.toggle("dark");
+
+}
+
+showNotes();
+
 </script>
+
 </body>
-</html>
+  </html>
