@@ -16,21 +16,23 @@ body{
   font-family:Arial,sans-serif;
   background:#f2f4f7;
   color:#222;
+  transition:.3s;
 }
 
 header{
   background:#222;
   color:white;
-  padding:20px;
+  padding:18px 15px;
   text-align:center;
 }
 
 header h1{
   margin:0 0 12px;
+  font-size:28px;
 }
 
 .container{
-  max-width:600px;
+  max-width:650px;
   margin:auto;
   padding:15px;
 }
@@ -48,13 +50,6 @@ button{
   background:#222;
   color:white;
   margin-bottom:15px;
-}
-
-.tool{
-  width:100%;
-  background:#16834b;
-  color:white;
-  margin-bottom:10px;
 }
 
 input,textarea{
@@ -76,10 +71,11 @@ textarea{
   width:100%;
   background:#16834b;
   color:white;
+  margin-bottom:15px;
 }
 
 .search{
-  margin-top:10px;
+  margin-top:5px;
 }
 
 .note{
@@ -92,10 +88,18 @@ textarea{
 
 .note h3{
   margin-top:0;
+  word-break:break-word;
 }
 
 .note p{
   white-space:pre-wrap;
+  word-break:break-word;
+}
+
+.date{
+  color:#777;
+  font-size:12px;
+  margin-bottom:12px;
 }
 
 .edit{
@@ -108,12 +112,115 @@ textarea{
   color:white;
 }
 
+.section-btn{
+  width:100%;
+  margin-top:10px;
+  background:#1976d2;
+  color:white;
+}
+
+#editor{
+  display:none;
+}
+
+#calculator{
+  display:none;
+  background:white;
+  padding:15px;
+  border-radius:15px;
+  box-shadow:0 3px 12px #ccc;
+  margin-top:15px;
+}
+
+.calc-display{
+  width:100%;
+  height:60px;
+  background:#111;
+  color:white;
+  border:none;
+  border-radius:10px;
+  font-size:26px;
+  text-align:right;
+  padding:10px;
+  margin-bottom:10px;
+}
+
+.calc-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+}
+
+.calc-grid button{
+  height:55px;
+  font-size:20px;
+  background:#eee;
+}
+
+.calc-grid .operator{
+  background:#ddd;
+}
+
+.calc-grid .equal{
+  background:#16834b;
+  color:white;
+}
+
+.calc-grid .clear{
+  background:#d33;
+  color:white;
+}
+
+#pinScreen{
+  position:fixed;
+  inset:0;
+  background:#222;
+  color:white;
+  z-index:9999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.pin-box{
+  width:100%;
+  max-width:350px;
+  text-align:center;
+}
+
+.pin-box h2{
+  font-size:28px;
+}
+
+.pin-box p{
+  color:#ccc;
+}
+
+.pin-input{
+  text-align:center;
+  font-size:25px;
+  letter-spacing:8px;
+}
+
+.pin-button{
+  width:100%;
+  background:#16834b;
+  color:white;
+}
+
+.pin-error{
+  color:#ff6b6b;
+  min-height:22px;
+}
+
 .dark{
   background:#181818;
   color:white;
 }
 
-.dark .note{
+.dark .note,
+.dark #calculator{
   background:#292929;
   color:white;
 }
@@ -134,168 +241,84 @@ textarea{
   background:#000;
 }
 
-#editor{
-  display:none;
-}
-
-#calculator{
-  display:none;
-  background:white;
-  padding:15px;
-  border-radius:15px;
-  margin-bottom:15px;
-  box-shadow:0 3px 10px #ccc;
-}
-
-#calcDisplay{
-  width:100%;
-  height:60px;
-  font-size:25px;
-  text-align:right;
-  margin-bottom:12px;
-}
-
-.calcGrid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:8px;
-}
-
-.calcGrid button{
-  font-size:20px;
-  padding:15px;
-  background:#eee;
-}
-
-.calcGrid .equal{
-  background:#16834b;
+.dark .calc-grid button{
+  background:#444;
   color:white;
 }
 
-.calcGrid .clear{
-  background:#d33;
-  color:white;
-}
-
-#pinScreen{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:#181818;
-  color:white;
-  z-index:9999;
-  padding:30px 20px;
-  text-align:center;
-}
-
-#pinScreen input{
-  max-width:300px;
-  text-align:center;
-  font-size:24px;
-  letter-spacing:8px;
-}
-
-.pinBtn{
-  background:#16834b;
-  color:white;
-  width:300px;
-  max-width:100%;
-}
-
-.pinSmall{
+.dark .calc-grid .operator{
   background:#555;
-  color:white;
-  margin-top:10px;
 }
 
+.dark .date{
+  color:#bbb;
+}
+
+.hidden{
+  display:none !important;
+}
 </style>
 </head>
 
 <body>
 
-<!-- PIN SCREEN -->
+<!-- PIN LOCK -->
 <div id="pinScreen">
-  <h1>🔐 My Notes</h1>
-  <p>আপনার PIN লিখুন</p>
+  <div class="pin-box">
 
-  <input
-    id="pinInput"
-    type="password"
-    inputmode="numeric"
-    maxlength="6"
-    placeholder="PIN"
-  >
+    <h2>🔐 My Notes</h2>
 
-  <br>
+    <p id="pinMessage">
+      আপনার জন্য একটি 4–6 digit PIN তৈরি করুন
+    </p>
 
-  <button class="pinBtn" onclick="checkPIN()">
-    🔓 Unlock
-  </button>
+    <input
+      id="pinInput"
+      class="pin-input"
+      type="password"
+      inputmode="numeric"
+      maxlength="6"
+      placeholder="••••••"
+    >
 
-  <br>
+    <div class="pin-error" id="pinError"></div>
 
-  <button class="pinSmall" onclick="removePIN()">
-    PIN ভুলে গেছেন / Reset
-  </button>
+    <button
+      class="pin-button"
+      onclick="submitPIN()">
+      🔓 Continue
+    </button>
+
+  </div>
 </div>
 
+
 <header>
+
   <h1>📝 My Notes</h1>
 
   <button onclick="darkMode()">
     🌙 Dark Mode
   </button>
+
 </header>
+
 
 <div class="container">
 
-  <button class="add" onclick="openEditor()">
+  <button
+    class="add"
+    onclick="openEditor()">
     ➕ Add New Note
   </button>
 
-  <button class="tool" onclick="toggleCalculator()">
+
+  <button
+    class="section-btn"
+    onclick="toggleCalculator()">
     🧮 Calculator
   </button>
 
-  <!-- CALCULATOR -->
-  <div id="calculator">
-
-    <input
-      id="calcDisplay"
-      type="text"
-      readonly
-      placeholder="0"
-    >
-
-    <div class="calcGrid">
-
-      <button class="clear" onclick="clearCalc()">C</button>
-      <button onclick="calcInput('(')">(</button>
-      <button onclick="calcInput(')')">)</button>
-      <button onclick="calcInput('/')">÷</button>
-
-      <button onclick="calcInput('7')">7</button>
-      <button onclick="calcInput('8')">8</button>
-      <button onclick="calcInput('9')">9</button>
-      <button onclick="calcInput('*')">×</button>
-
-      <button onclick="calcInput('4')">4</button>
-      <button onclick="calcInput('5')">5</button>
-      <button onclick="calcInput('6')">6</button>
-      <button onclick="calcInput('-')">−</button>
-
-      <button onclick="calcInput('1')">1</button>
-      <button onclick="calcInput('2')">2</button>
-      <button onclick="calcInput('3')">3</button>
-      <button onclick="calcInput('+')">+</button>
-
-      <button onclick="calcInput('0')">0</button>
-      <button onclick="calcInput('.')">.</button>
-      <button onclick="backspaceCalc()">⌫</button>
-      <button class="equal" onclick="calculate()">=</button>
-
-    </div>
-  </div>
 
   <!-- NOTE EDITOR -->
   <div id="editor">
@@ -303,163 +326,381 @@ textarea{
     <input
       id="titleInput"
       type="text"
-      placeholder="Note-এর Title লিখুন"
-    >
+      placeholder="Note-এর Title লিখুন">
 
     <textarea
       id="textInput"
-      placeholder="আপনার Note লিখুন..."
-    ></textarea>
+      placeholder="আপনার Note লিখুন..."></textarea>
 
-    <button class="save" onclick="saveNote()">
+    <button
+      class="save"
+      onclick="saveNote()">
       💾 Save Note
     </button>
 
   </div>
+
+
+  <!-- CALCULATOR -->
+  <div id="calculator">
+
+    <h2>🧮 Calculator</h2>
+
+    <input
+      id="calcDisplay"
+      class="calc-display"
+      type="text"
+      readonly
+      value="0">
+
+
+    <div class="calc-grid">
+
+      <button
+        class="clear"
+        onclick="clearCalc()">
+        C
+      </button>
+
+      <button onclick="backspaceCalc()">
+        ⌫
+      </button>
+
+      <button
+        class="operator"
+        onclick="calcInput('%')">
+        %
+      </button>
+
+      <button
+        class="operator"
+        onclick="calcInput('/')">
+        ÷
+      </button>
+
+
+      <button onclick="calcInput('7')">7</button>
+      <button onclick="calcInput('8')">8</button>
+      <button onclick="calcInput('9')">9</button>
+
+      <button
+        class="operator"
+        onclick="calcInput('*')">
+        ×
+      </button>
+
+
+      <button onclick="calcInput('4')">4</button>
+      <button onclick="calcInput('5')">5</button>
+      <button onclick="calcInput('6')">6</button>
+
+      <button
+        class="operator"
+        onclick="calcInput('-')">
+        −
+      </button>
+
+
+      <button onclick="calcInput('1')">1</button>
+      <button onclick="calcInput('2')">2</button>
+      <button onclick="calcInput('3')">3</button>
+
+      <button
+        class="operator"
+        onclick="calcInput('+')">
+        +
+      </button>
+
+
+      <button onclick="calcInput('0')">
+        0
+      </button>
+
+      <button onclick="calcInput('.')">
+        .
+      </button>
+
+      <button
+        onclick="calcInput('(')">
+        (
+      </button>
+
+      <button
+        class="equal"
+        onclick="calculate()">
+        =
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- SEARCH -->
 
   <input
     class="search"
     id="search"
     type="text"
     placeholder="🔍 Note খুঁজুন..."
-    oninput="showNotes()"
-  >
+    oninput="showNotes()">
+
 
   <div id="notes"></div>
 
+
+  <button
+    class="section-btn"
+    onclick="changePIN()">
+    🔑 Change PIN
+  </button>
+
 </div>
+
 
 <script>
 
-let editIndex=-1;
+let editIndex = -1;
+
+
+/* =========================
+   PIN SYSTEM
+========================= */
+
+function setupPIN(){
+
+  let savedPIN =
+    localStorage.getItem("notesPIN");
+
+  if(savedPIN){
+
+    document.getElementById("pinMessage").innerText =
+      "আপনার PIN দিন";
+
+  }else{
+
+    document.getElementById("pinMessage").innerText =
+      "প্রথমে একটি 4–6 digit PIN তৈরি করুন";
+
+  }
+
+}
+
+
+function submitPIN(){
+
+  let input =
+    document.getElementById("pinInput").value.trim();
+
+  let error =
+    document.getElementById("pinError");
+
+  if(!/^[0-9]{4,6}$/.test(input)){
+
+    error.innerText =
+      "PIN অবশ্যই 4–6 সংখ্যার হতে হবে।";
+
+    return;
+  }
+
+
+  let savedPIN =
+    localStorage.getItem("notesPIN");
+
+
+  if(!savedPIN){
+
+    localStorage.setItem(
+      "notesPIN",
+      input
+    );
+
+    unlockApp();
+
+    return;
+  }
+
+
+  if(input === savedPIN){
+
+    unlockApp();
+
+  }else{
+
+    error.innerText =
+      "❌ PIN সঠিক নয়।";
+
+    document.getElementById(
+      "pinInput"
+    ).value = "";
+
+  }
+
+}
+
+
+function unlockApp(){
+
+  document.getElementById(
+    "pinScreen"
+  ).classList.add("hidden");
+
+  document.getElementById(
+    "pinInput"
+  ).value = "";
+
+  showNotes();
+
+}
+
+
+function changePIN(){
+
+  let oldPIN =
+    prompt("বর্তমান PIN লিখুন:");
+
+  if(oldPIN === null) return;
+
+
+  let savedPIN =
+    localStorage.getItem("notesPIN");
+
+
+  if(oldPIN !== savedPIN){
+
+    alert("❌ বর্তমান PIN সঠিক নয়।");
+
+    return;
+  }
+
+
+  let newPIN =
+    prompt("নতুন 4–6 digit PIN দিন:");
+
+  if(newPIN === null) return;
+
+
+  if(!/^[0-9]{4,6}$/.test(newPIN)){
+
+    alert(
+      "PIN অবশ্যই 4–6 সংখ্যার হতে হবে।"
+    );
+
+    return;
+  }
+
+
+  localStorage.setItem(
+    "notesPIN",
+    newPIN
+  );
+
+  alert("✅ PIN সফলভাবে পরিবর্তন হয়েছে।");
+
+}
+
 
 /* =========================
    NOTES
 ========================= */
 
 function openEditor(){
-  document.getElementById("editor").style.display="block";
-  document.getElementById("titleInput").focus();
+
+  document.getElementById(
+    "editor"
+  ).style.display = "block";
+
+  document.getElementById(
+    "titleInput"
+  ).focus();
+
 }
+
 
 function saveNote(){
 
-  let title=document.getElementById("titleInput").value;
-  let text=document.getElementById("textInput").value;
+  let title =
+    document.getElementById(
+      "titleInput"
+    ).value.trim();
 
-  if(title.trim()==="" && text.trim()===""){
+
+  let text =
+    document.getElementById(
+      "textInput"
+    ).value.trim();
+
+
+  if(title === "" && text === ""){
+
     alert("আগে Note লিখুন!");
+
     return;
   }
 
-  let notes=JSON.parse(localStorage.getItem("notes"))||[];
 
-  let newNote={
+  let notes =
+    JSON.parse(
+      localStorage.getItem("notes")
+    ) || [];
+
+
+  let now =
+    new Date().toLocaleString(
+      "bn-BD"
+    );
+
+
+  let newNote = {
+
     title:title,
+
     text:text,
-    date:new Date().toLocaleString()
+
+    date:now
+
   };
 
-  if(editIndex===-1){
+
+  if(editIndex === -1){
+
     notes.push(newNote);
+
   }else{
-    notes[editIndex]=newNote;
-    editIndex=-1;
+
+    notes[editIndex] =
+      newNote;
+
+    editIndex = -1;
+
   }
 
-  localStorage.setItem("notes",JSON.stringify(notes));
-
-  document.getElementById("titleInput").value="";
-  document.getElementById("textInput").value="";
-  document.getElementById("editor").style.display="none";
-
-  showNotes();
-}
-
-function showNotes(){
-
-  let notes=JSON.parse(localStorage.getItem("notes"))||[];
-
-  let search=document
-    .getElementById("search")
-    .value
-    .toLowerCase();
-
-  let container=document.getElementById("notes");
-
-  container.innerHTML="";
-
-  notes.forEach(function(note,index){
-
-    let title=(note.title||"").toLowerCase();
-    let text=(note.text||"").toLowerCase();
-
-    if(title.includes(search)||text.includes(search)){
-
-      container.innerHTML+=`
-
-      <div class="note">
-
-        <h3>📌 ${escapeHTML(note.title)}</h3>
-
-        <p>${escapeHTML(note.text)}</p>
-
-        <small>📅 ${note.date||""}</small>
-
-        <br><br>
-
-        <button
-          class="edit"
-          onclick="editNote(${index})">
-          ✏️ Edit
-        </button>
-
-        <button
-          class="delete"
-          onclick="deleteNote(${index})">
-          🗑️ Delete
-        </button>
-
-      </div>
-
-      `;
-    }
-  });
-}
-
-function editNote(index){
-
-  let notes=JSON.parse(localStorage.getItem("notes"))||[];
-
-  document.getElementById("titleInput").value=
-    notes[index].title;
-
-  document.getElementById("textInput").value=
-    notes[index].text;
-
-  editIndex=index;
-
-  document.getElementById("editor").style.display="block";
-
-  window.scrollTo(0,0);
-}
-
-function deleteNote(index){
-
-  if(!confirm("এই Note Delete করবেন?"))
-    return;
-
-  let notes=JSON.parse(localStorage.getItem("notes"))||[];
-
-  notes.splice(index,1);
 
   localStorage.setItem(
     "notes",
     JSON.stringify(notes)
   );
 
+
+  document.getElementById(
+    "titleInput"
+  ).value = "";
+
+
+  document.getElementById(
+    "textInput"
+  ).value = "";
+
+
+  document.getElementById(
+    "editor"
+  ).style.display = "none";
+
+
   showNotes();
+
 }
+
 
 function escapeHTML(text){
 
@@ -469,76 +710,156 @@ function escapeHTML(text){
     .replace(/>/g,"&gt;")
     .replace(/"/g,"&quot;")
     .replace(/'/g,"&#039;");
+
 }
 
 
-/* =========================
-   CALCULATOR
-========================= */
+function showNotes(){
 
-function toggleCalculator(){
+  let notes =
+    JSON.parse(
+      localStorage.getItem("notes")
+    ) || [];
 
-  let calc=document.getElementById("calculator");
 
-  if(calc.style.display==="none" ||
-     calc.style.display===""){
-    calc.style.display="block";
-  }else{
-    calc.style.display="none";
-  }
-}
+  let search =
+    document.getElementById(
+      "search"
+    ).value.toLowerCase();
 
-function calcInput(value){
 
-  document.getElementById("calcDisplay").value+=value;
-}
+  let container =
+    document.getElementById(
+      "notes"
+    );
 
-function clearCalc(){
 
-  document.getElementById("calcDisplay").value="";
-}
+  container.innerHTML = "";
 
-function backspaceCalc(){
 
-  let display=document.getElementById("calcDisplay");
+  notes.forEach(
+    function(note,index){
 
-  display.value=display.value.slice(0,-1);
-}
+      let title =
+        (note.title || "")
+        .toLowerCase();
 
-function calculate(){
 
-  let display=document.getElementById("calcDisplay");
+      let text =
+        (note.text || "")
+        .toLowerCase();
 
-  let expression=display.value;
 
-  if(!expression){
-    return;
-  }
+      if(
+        title.includes(search) ||
+        text.includes(search)
+      ){
 
-  /* শুধু calculator-এর প্রয়োজনীয় characters */
-  if(!/^[0-9+\-*/().\s]+$/.test(expression)){
-    display.value="Error";
-    return;
-  }
+        container.innerHTML += `
 
-  try{
+          <div class="note">
 
-    let result=Function(
-      '"use strict"; return ('+expression+')'
-    )();
+            <h3>
+              📌 ${escapeHTML(note.title)}
+            </h3>
 
-    if(!Number.isFinite(result)){
-      display.value="Error";
-      return;
+            <p>
+              ${escapeHTML(note.text)}
+            </p>
+
+            <div class="date">
+              📅 ${escapeHTML(note.date || "")}
+            </div>
+
+            <button
+              class="edit"
+              onclick="editNote(${index})">
+              ✏️ Edit
+            </button>
+
+            <button
+              class="delete"
+              onclick="deleteNote(${index})">
+              🗑️ Delete
+            </button>
+
+          </div>
+
+        `;
+
+      }
+
     }
+  );
 
-    display.value=result;
+}
 
-  }catch(error){
 
-    display.value="Error";
+function editNote(index){
 
-  }
+  let notes =
+    JSON.parse(
+      localStorage.getItem("notes")
+    ) || [];
+
+
+  document.getElementById(
+    "titleInput"
+  ).value =
+    notes[index].title || "";
+
+
+  document.getElementById(
+    "textInput"
+  ).value =
+    notes[index].text || "";
+
+
+  editIndex = index;
+
+
+  document.getElementById(
+    "editor"
+  ).style.display = "block";
+
+
+  window.scrollTo(
+    0,
+    0
+  );
+
+}
+
+
+function deleteNote(index){
+
+  if(
+    !confirm(
+      "এই Note Delete করবেন?"
+    )
+  ) return;
+
+
+  let notes =
+    JSON.parse(
+      localStorage.getItem("notes")
+    ) || [];
+
+
+  notes.splice(
+    index,
+    1
+  );
+
+
+  localStorage.setItem(
+    "notes",
+    JSON.stringify(notes)
+  );
+
+
+  showNotes();
+
 }
 
 
@@ -548,116 +869,134 @@ function calculate(){
 
 function darkMode(){
 
-  document.body.classList.toggle("dark");
+  document.body.classList.toggle(
+    "dark"
+  );
+
 
   localStorage.setItem(
     "darkMode",
-    document.body.classList.contains("dark")
+    document.body.classList.contains(
+      "dark"
+    )
   );
-}
 
-if(localStorage.getItem("darkMode")==="true"){
-  document.body.classList.add("dark");
 }
 
 
 /* =========================
-   PIN LOCK
+   CALCULATOR
 ========================= */
 
-function setupPIN(){
+function toggleCalculator(){
 
-  let pin=localStorage.getItem("appPIN");
-
-  if(!pin){
-
-    let newPin=prompt(
-      "My Notes-এর জন্য 4-6 সংখ্যার PIN তৈরি করুন:"
+  let calculator =
+    document.getElementById(
+      "calculator"
     );
 
-    if(newPin && /^[0-9]{4,6}$/.test(newPin)){
 
-      localStorage.setItem(
-        "appPIN",
-        newPin
-      );
+  if(
+    calculator.style.display ===
+    "none" ||
+    calculator.style.display === ""
+  ){
 
-      alert("PIN তৈরি হয়েছে ✅");
-
-    }else{
-
-      alert(
-        "সঠিক 4-6 সংখ্যার PIN দিন।"
-      );
-    }
-  }
-}
-
-function checkPIN(){
-
-  let savedPIN=
-    localStorage.getItem("appPIN");
-
-  let entered=
-    document.getElementById("pinInput").value;
-
-  if(entered===savedPIN){
-
-    document.getElementById(
-      "pinScreen"
-    ).style.display="none";
-
-    document.getElementById(
-      "pinInput"
-    ).value="";
+    calculator.style.display =
+      "block";
 
   }else{
 
-    alert("ভুল PIN ❌");
+    calculator.style.display =
+      "none";
 
   }
+
 }
 
-function removePIN(){
 
-  let answer=confirm(
-    "PIN Reset করতে চান?"
-  );
+function calcInput(value){
 
-  if(answer){
-
-    localStorage.removeItem("appPIN");
-
-    alert(
-      "PIN Reset হয়েছে। অ্যাপটি আবার খুলে নতুন PIN তৈরি করুন।"
+  let display =
+    document.getElementById(
+      "calcDisplay"
     );
 
-    location.reload();
+
+  if(display.value === "0"){
+
+    display.value = value;
+
+  }else{
+
+    display.value += value;
+
   }
+
 }
 
 
-/* =========================
-   START
-========================= */
-
-showNotes();
-
-let savedPIN=
-  localStorage.getItem("appPIN");
-
-if(savedPIN){
+function clearCalc(){
 
   document.getElementById(
-    "pinScreen"
-  ).style.display="block";
+    "calcDisplay"
+  ).value = "0";
 
-}else{
-
-  setupPIN();
 }
 
-</script>
 
-</body>
-</html>
+function backspaceCalc(){
+
+  let display =
+    document.getElementById(
+      "calcDisplay"
+    );
+
+
+  display.value =
+    display.value.slice(
+      0,
+      -1
+    );
+
+
+  if(display.value === ""){
+
+    display.value = "0";
+
+  }
+
+}
+
+
+function calculate(){
+
+  let display =
+    document.getElementById(
+      "calcDisplay"
+    );
+
+
+  let expression =
+    display.value;
+
+
+  if(
+    !/^[0-9+\-*/%.() ]+$/.test(
+      expression
+    )
+  ){
+
+    display.value =
+      "Error";
+
+    return;
+  }
+
+
+  try{
+
+    let result =
+      Function(
+        '"use strict"; return (' +
+        expression +
