@@ -283,11 +283,11 @@ textarea{
 
     <div class="pin-error" id="pinError"></div>
 
-    <button
-      class="pin-button"
-      onclick="submitPIN()">
-      🔓 Continue
-    </button>
+    <button class="pin-button" id="pinButton">🔓 Continue</button>
+    
+      
+    
+
 
   </div>
 </div>
@@ -457,7 +457,37 @@ textarea{
 
 </div>
 
+document.getElementById("pinButton").addEventListener("click", function () {
+    const input = document.getElementById("pinInput");
+    const error = document.getElementById("pinError");
+    const pin = input.value.trim();
 
+    error.innerText = "";
+
+    if (!/^[0-9]{4,6}$/.test(pin)) {
+        error.innerText = "PIN অবশ্যই 4–6 সংখ্যার হতে হবে।";
+        input.focus();
+        return;
+    }
+
+    const savedPIN = localStorage.getItem("notesPIN");
+
+    if (!savedPIN) {
+        localStorage.setItem("notesPIN", pin);
+        document.getElementById("pinScreen").style.display = "none";
+        showNotes();
+        return;
+    }
+
+    if (pin === savedPIN) {
+        document.getElementById("pinScreen").style.display = "none";
+        showNotes();
+    } else {
+        error.innerText = "❌ PIN সঠিক নয়।";
+        input.value = "";
+        input.focus();
+    }
+});
 <script>
 
 let editIndex = -1;
