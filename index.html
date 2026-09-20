@@ -1,139 +1,211 @@
 <!DOCTYPE html>
 <html lang="bn">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>My Notes</title>
-
 <link rel="icon" type="image/png" href="icon.png">
 
 <style>
-
-* {
-  box-sizing: border-box;
+*{
+  box-sizing:border-box;
 }
 
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f2f4f7;
-  color: #222;
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f2f4f7;
+  color:#222;
 }
 
-header {
-  background: #222;
-  color: white;
-  padding: 20px;
-  text-align: center;
+header{
+  background:#222;
+  color:white;
+  padding:20px;
+  text-align:center;
 }
 
-header h1 {
-  margin: 0 0 10px;
+header h1{
+  margin:0 0 12px;
 }
 
-.container {
-  max-width: 600px;
-  margin: auto;
-  padding: 15px;
+.container{
+  max-width:600px;
+  margin:auto;
+  padding:15px;
 }
 
-input,
-textarea {
-  width: 100%;
-  padding: 14px;
-  margin-bottom: 12px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  font-size: 16px;
-  outline: none;
+button{
+  border:none;
+  border-radius:10px;
+  padding:12px 16px;
+  font-size:15px;
+  cursor:pointer;
 }
 
-textarea {
-  height: 150px;
-  resize: none;
+.add{
+  width:100%;
+  background:#222;
+  color:white;
+  margin-bottom:15px;
 }
 
-button {
-  border: none;
-  border-radius: 10px;
-  padding: 12px 16px;
-  font-size: 15px;
-  cursor: pointer;
+.tool{
+  width:100%;
+  background:#16834b;
+  color:white;
+  margin-bottom:10px;
 }
 
-.add {
-  width: 100%;
-  background: #222;
-  color: white;
-  margin-bottom: 15px;
+input,textarea{
+  width:100%;
+  padding:14px;
+  margin-bottom:12px;
+  border:1px solid #ccc;
+  border-radius:10px;
+  font-size:16px;
+  outline:none;
 }
 
-.save {
-  width: 100%;
-  background: #16834b;
-  color: white;
+textarea{
+  height:150px;
+  resize:none;
 }
 
-.search {
-  margin-top: 10px;
+.save{
+  width:100%;
+  background:#16834b;
+  color:white;
 }
 
-.note {
-  background: white;
-  margin-top: 15px;
-  padding: 16px;
-  border-radius: 12px;
-  box-shadow: 0 3px 10px #ccc;
+.search{
+  margin-top:10px;
 }
 
-.note h3 {
-  margin-top: 0;
+.note{
+  background:white;
+  margin-top:15px;
+  padding:16px;
+  border-radius:12px;
+  box-shadow:0 3px 10px #ccc;
 }
 
-.note p {
-  white-space: pre-wrap;
+.note h3{
+  margin-top:0;
 }
 
-.edit {
-  background: #ddd;
-  margin-right: 5px;
+.note p{
+  white-space:pre-wrap;
 }
 
-.delete {
-  background: #d33;
-  color: white;
+.edit{
+  background:#ddd;
+  margin-right:5px;
 }
 
-.dark {
-  background: #181818;
-  color: white;
+.delete{
+  background:#d33;
+  color:white;
 }
 
-.dark .note {
-  background: #292929;
-  color: white;
+.dark{
+  background:#181818;
+  color:white;
+}
+
+.dark .note{
+  background:#292929;
+  color:white;
 }
 
 .dark input,
-.dark textarea {
-  background: #292929;
-  color: white;
-  border-color: #555;
+.dark textarea{
+  background:#292929;
+  color:white;
+  border-color:#555;
 }
 
-.dark .edit {
-  background: #555;
-  color: white;
+.dark .edit{
+  background:#555;
+  color:white;
 }
 
-.dark header {
-  background: #000;
+.dark header{
+  background:#000;
 }
 
-#editor {
-  display: none;
+#editor{
+  display:none;
+}
+
+#calculator{
+  display:none;
+  background:white;
+  padding:15px;
+  border-radius:15px;
+  margin-bottom:15px;
+  box-shadow:0 3px 10px #ccc;
+}
+
+#calcDisplay{
+  width:100%;
+  height:60px;
+  font-size:25px;
+  text-align:right;
+  margin-bottom:12px;
+}
+
+.calcGrid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+}
+
+.calcGrid button{
+  font-size:20px;
+  padding:15px;
+  background:#eee;
+}
+
+.calcGrid .equal{
+  background:#16834b;
+  color:white;
+}
+
+.calcGrid .clear{
+  background:#d33;
+  color:white;
+}
+
+#pinScreen{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:#181818;
+  color:white;
+  z-index:9999;
+  padding:30px 20px;
+  text-align:center;
+}
+
+#pinScreen input{
+  max-width:300px;
+  text-align:center;
+  font-size:24px;
+  letter-spacing:8px;
+}
+
+.pinBtn{
+  background:#16834b;
+  color:white;
+  width:300px;
+  max-width:100%;
+}
+
+.pinSmall{
+  background:#555;
+  color:white;
+  margin-top:10px;
 }
 
 </style>
@@ -141,200 +213,245 @@ button {
 
 <body>
 
+<!-- PIN SCREEN -->
+<div id="pinScreen">
+  <h1>🔐 My Notes</h1>
+  <p>আপনার PIN লিখুন</p>
+
+  <input
+    id="pinInput"
+    type="password"
+    inputmode="numeric"
+    maxlength="6"
+    placeholder="PIN"
+  >
+
+  <br>
+
+  <button class="pinBtn" onclick="checkPIN()">
+    🔓 Unlock
+  </button>
+
+  <br>
+
+  <button class="pinSmall" onclick="removePIN()">
+    PIN ভুলে গেছেন / Reset
+  </button>
+</div>
+
 <header>
+  <h1>📝 My Notes</h1>
 
-<h1>📝 My Notes</h1>
-
-<button onclick="darkMode()">
-🌙 Dark Mode
-</button>
-
+  <button onclick="darkMode()">
+    🌙 Dark Mode
+  </button>
 </header>
 
 <div class="container">
 
-<button class="add" onclick="openEditor()">
-➕ Add New Note
-</button>
+  <button class="add" onclick="openEditor()">
+    ➕ Add New Note
+  </button>
 
-<div id="editor">
+  <button class="tool" onclick="toggleCalculator()">
+    🧮 Calculator
+  </button>
 
-<input
-id="titleInput"
-type="text"
-placeholder="Note-এর Title লিখুন">
+  <!-- CALCULATOR -->
+  <div id="calculator">
 
-<textarea
-id="textInput"
-placeholder="আপনার Note লিখুন...">
-</textarea>
+    <input
+      id="calcDisplay"
+      type="text"
+      readonly
+      placeholder="0"
+    >
 
-<button class="save" onclick="saveNote()">
-💾 Save Note
-</button>
+    <div class="calcGrid">
 
-</div>
+      <button class="clear" onclick="clearCalc()">C</button>
+      <button onclick="calcInput('(')">(</button>
+      <button onclick="calcInput(')')">)</button>
+      <button onclick="calcInput('/')">÷</button>
 
-<input
-class="search"
-id="search"
-type="text"
-placeholder="🔍 Note খুঁজুন..."
-oninput="showNotes()">
+      <button onclick="calcInput('7')">7</button>
+      <button onclick="calcInput('8')">8</button>
+      <button onclick="calcInput('9')">9</button>
+      <button onclick="calcInput('*')">×</button>
 
-<div id="notes"></div>
+      <button onclick="calcInput('4')">4</button>
+      <button onclick="calcInput('5')">5</button>
+      <button onclick="calcInput('6')">6</button>
+      <button onclick="calcInput('-')">−</button>
+
+      <button onclick="calcInput('1')">1</button>
+      <button onclick="calcInput('2')">2</button>
+      <button onclick="calcInput('3')">3</button>
+      <button onclick="calcInput('+')">+</button>
+
+      <button onclick="calcInput('0')">0</button>
+      <button onclick="calcInput('.')">.</button>
+      <button onclick="backspaceCalc()">⌫</button>
+      <button class="equal" onclick="calculate()">=</button>
+
+    </div>
+  </div>
+
+  <!-- NOTE EDITOR -->
+  <div id="editor">
+
+    <input
+      id="titleInput"
+      type="text"
+      placeholder="Note-এর Title লিখুন"
+    >
+
+    <textarea
+      id="textInput"
+      placeholder="আপনার Note লিখুন..."
+    ></textarea>
+
+    <button class="save" onclick="saveNote()">
+      💾 Save Note
+    </button>
+
+  </div>
+
+  <input
+    class="search"
+    id="search"
+    type="text"
+    placeholder="🔍 Note খুঁজুন..."
+    oninput="showNotes()"
+  >
+
+  <div id="notes"></div>
 
 </div>
 
 <script>
 
-let editIndex = -1;
+let editIndex=-1;
 
-function openEditor() {
+/* =========================
+   NOTES
+========================= */
 
-  document.getElementById("editor")
-  .style.display = "block";
-
-  document.getElementById("titleInput")
-  .focus();
+function openEditor(){
+  document.getElementById("editor").style.display="block";
+  document.getElementById("titleInput").focus();
 }
 
-function saveNote() {
+function saveNote(){
 
-  let title =
-  document.getElementById("titleInput").value;
+  let title=document.getElementById("titleInput").value;
+  let text=document.getElementById("textInput").value;
 
-  let text =
-  document.getElementById("textInput").value;
-
-  if (title.trim() === "" &&
-      text.trim() === "") {
-
+  if(title.trim()==="" && text.trim()===""){
     alert("আগে Note লিখুন!");
     return;
   }
 
-  let notes =
-  JSON.parse(localStorage.getItem("notes"))
-  || [];
+  let notes=JSON.parse(localStorage.getItem("notes"))||[];
 
-  let newNote = {
-    title: title,
-    text: text
+  let newNote={
+    title:title,
+    text:text,
+    date:new Date().toLocaleString()
   };
 
-  if (editIndex === -1) {
+  if(editIndex===-1){
     notes.push(newNote);
-  } else {
-    notes[editIndex] = newNote;
-    editIndex = -1;
+  }else{
+    notes[editIndex]=newNote;
+    editIndex=-1;
   }
 
-  localStorage.setItem(
-    "notes",
-    JSON.stringify(notes)
-  );
+  localStorage.setItem("notes",JSON.stringify(notes));
 
-  document.getElementById("titleInput")
-  .value = "";
-
-  document.getElementById("textInput")
-  .value = "";
-
-  document.getElementById("editor")
-  .style.display = "none";
+  document.getElementById("titleInput").value="";
+  document.getElementById("textInput").value="";
+  document.getElementById("editor").style.display="none";
 
   showNotes();
 }
 
-function showNotes() {
+function showNotes(){
 
-  let notes =
-  JSON.parse(localStorage.getItem("notes"))
-  || [];
+  let notes=JSON.parse(localStorage.getItem("notes"))||[];
 
-  let search =
-  document.getElementById("search")
-  .value.toLowerCase();
+  let search=document
+    .getElementById("search")
+    .value
+    .toLowerCase();
 
-  let container =
-  document.getElementById("notes");
+  let container=document.getElementById("notes");
 
-  container.innerHTML = "";
+  container.innerHTML="";
 
-  notes.forEach(function(note, index) {
+  notes.forEach(function(note,index){
 
-    let title =
-    (note.title || "").toLowerCase();
+    let title=(note.title||"").toLowerCase();
+    let text=(note.text||"").toLowerCase();
 
-    let text =
-    (note.text || "").toLowerCase();
+    if(title.includes(search)||text.includes(search)){
 
-    if (
-      title.includes(search) ||
-      text.includes(search)
-    ) {
-
-      container.innerHTML += `
+      container.innerHTML+=`
 
       <div class="note">
 
-        <h3>📌 ${note.title}</h3>
+        <h3>📌 ${escapeHTML(note.title)}</h3>
 
-        <p>${note.text}</p>
+        <p>${escapeHTML(note.text)}</p>
+
+        <small>📅 ${note.date||""}</small>
+
+        <br><br>
 
         <button
-        class="edit"
-        onclick="editNote(${index})">
-        ✏️ Edit
+          class="edit"
+          onclick="editNote(${index})">
+          ✏️ Edit
         </button>
 
         <button
-        class="delete"
-        onclick="deleteNote(${index})">
-        🗑️ Delete
+          class="delete"
+          onclick="deleteNote(${index})">
+          🗑️ Delete
         </button>
 
       </div>
 
       `;
     }
-
   });
-
 }
 
-function editNote(index) {
+function editNote(index){
 
-  let notes =
-  JSON.parse(localStorage.getItem("notes"))
-  || [];
+  let notes=JSON.parse(localStorage.getItem("notes"))||[];
 
-  document.getElementById("titleInput")
-  .value = notes[index].title;
+  document.getElementById("titleInput").value=
+    notes[index].title;
 
-  document.getElementById("textInput")
-  .value = notes[index].text;
+  document.getElementById("textInput").value=
+    notes[index].text;
 
-  editIndex = index;
+  editIndex=index;
 
-  document.getElementById("editor")
-  .style.display = "block";
+  document.getElementById("editor").style.display="block";
 
-  window.scrollTo(0, 0);
+  window.scrollTo(0,0);
 }
 
-function deleteNote(index) {
+function deleteNote(index){
 
-  if (!confirm("এই Note Delete করবেন?")) {
+  if(!confirm("এই Note Delete করবেন?"))
     return;
-  }
 
-  let notes =
-  JSON.parse(localStorage.getItem("notes"))
-  || [];
+  let notes=JSON.parse(localStorage.getItem("notes"))||[];
 
-  notes.splice(index, 1);
+  notes.splice(index,1);
 
   localStorage.setItem(
     "notes",
@@ -344,15 +461,203 @@ function deleteNote(index) {
   showNotes();
 }
 
-function darkMode() {
+function escapeHTML(text){
+
+  return String(text)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+
+/* =========================
+   CALCULATOR
+========================= */
+
+function toggleCalculator(){
+
+  let calc=document.getElementById("calculator");
+
+  if(calc.style.display==="none" ||
+     calc.style.display===""){
+    calc.style.display="block";
+  }else{
+    calc.style.display="none";
+  }
+}
+
+function calcInput(value){
+
+  document.getElementById("calcDisplay").value+=value;
+}
+
+function clearCalc(){
+
+  document.getElementById("calcDisplay").value="";
+}
+
+function backspaceCalc(){
+
+  let display=document.getElementById("calcDisplay");
+
+  display.value=display.value.slice(0,-1);
+}
+
+function calculate(){
+
+  let display=document.getElementById("calcDisplay");
+
+  let expression=display.value;
+
+  if(!expression){
+    return;
+  }
+
+  /* শুধু calculator-এর প্রয়োজনীয় characters */
+  if(!/^[0-9+\-*/().\s]+$/.test(expression)){
+    display.value="Error";
+    return;
+  }
+
+  try{
+
+    let result=Function(
+      '"use strict"; return ('+expression+')'
+    )();
+
+    if(!Number.isFinite(result)){
+      display.value="Error";
+      return;
+    }
+
+    display.value=result;
+
+  }catch(error){
+
+    display.value="Error";
+
+  }
+}
+
+
+/* =========================
+   DARK MODE
+========================= */
+
+function darkMode(){
 
   document.body.classList.toggle("dark");
 
+  localStorage.setItem(
+    "darkMode",
+    document.body.classList.contains("dark")
+  );
 }
 
+if(localStorage.getItem("darkMode")==="true"){
+  document.body.classList.add("dark");
+}
+
+
+/* =========================
+   PIN LOCK
+========================= */
+
+function setupPIN(){
+
+  let pin=localStorage.getItem("appPIN");
+
+  if(!pin){
+
+    let newPin=prompt(
+      "My Notes-এর জন্য 4-6 সংখ্যার PIN তৈরি করুন:"
+    );
+
+    if(newPin && /^[0-9]{4,6}$/.test(newPin)){
+
+      localStorage.setItem(
+        "appPIN",
+        newPin
+      );
+
+      alert("PIN তৈরি হয়েছে ✅");
+
+    }else{
+
+      alert(
+        "সঠিক 4-6 সংখ্যার PIN দিন।"
+      );
+    }
+  }
+}
+
+function checkPIN(){
+
+  let savedPIN=
+    localStorage.getItem("appPIN");
+
+  let entered=
+    document.getElementById("pinInput").value;
+
+  if(entered===savedPIN){
+
+    document.getElementById(
+      "pinScreen"
+    ).style.display="none";
+
+    document.getElementById(
+      "pinInput"
+    ).value="";
+
+  }else{
+
+    alert("ভুল PIN ❌");
+
+  }
+}
+
+function removePIN(){
+
+  let answer=confirm(
+    "PIN Reset করতে চান?"
+  );
+
+  if(answer){
+
+    localStorage.removeItem("appPIN");
+
+    alert(
+      "PIN Reset হয়েছে। অ্যাপটি আবার খুলে নতুন PIN তৈরি করুন।"
+    );
+
+    location.reload();
+  }
+}
+
+
+/* =========================
+   START
+========================= */
+
 showNotes();
+
+let savedPIN=
+  localStorage.getItem("appPIN");
+
+if(savedPIN){
+
+  document.getElementById(
+    "pinScreen"
+  ).style.display="block";
+
+}else{
+
+  setupPIN();
+}
 
 </script>
 
 </body>
-  </html>
+</html>
