@@ -3,1175 +3,2534 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Notes 3.0</title>
+
+<title>My Notes</title>
 <link rel="icon" type="image/png" href="icon.png">
 
 <style>
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
 
 body{
-margin:0;
-font-family:Arial,sans-serif;
-background:#f2f4f7;
-color:#222;
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f3f5f7;
+  color:#222;
 }
 
 header{
-background:#222;
-color:white;
-padding:18px;
-text-align:center;
+  background:#222;
+  color:white;
+  padding:18px;
+  text-align:center;
 }
 
-header h1{margin:0 0 12px}
+header h1{
+  margin:0 0 6px;
+  font-size:26px;
+}
 
-.container{
-max-width:650px;
-margin:auto;
-padding:15px;
+header p{
+  margin:0;
+  opacity:.8;
+}
+
+.app{
+  max-width:700px;
+  margin:auto;
+  padding:15px;
+}
+
+.nav{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin-bottom:15px;
+}
+
+.nav button{
+  border:0;
+  border-radius:12px;
+  padding:12px 5px;
+  background:white;
+  font-size:14px;
+  box-shadow:0 2px 7px #ccc;
+  cursor:pointer;
+}
+
+.nav button.active{
+  background:#222;
+  color:white;
+}
+
+.section{
+  display:none;
+}
+
+.section.active{
+  display:block;
+}
+
+.card{
+  background:white;
+  padding:18px;
+  border-radius:15px;
+  margin-bottom:15px;
+  box-shadow:0 3px 10px #ddd;
+}
+
+.card h2{
+  margin-top:0;
+}
+
+.dashboard{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+
+.counter{
+  padding:18px;
+  border-radius:15px;
+  background:white;
+  text-align:center;
+  box-shadow:0 3px 10px #ddd;
+}
+
+.counter .number{
+  font-size:28px;
+  font-weight:bold;
+  margin-bottom:5px;
+}
+
+.quick{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
 }
 
 button{
-border:0;
-border-radius:10px;
-padding:11px 14px;
-font-size:15px;
-cursor:pointer;
+  border:0;
+  border-radius:10px;
+  padding:12px 15px;
+  font-size:15px;
+  cursor:pointer;
 }
 
-.tools{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:8px;
-margin-bottom:12px;
+.primary{
+  background:#222;
+  color:white;
 }
 
-.tool{
-background:#444;
-color:white;
-width:100%;
+.green{
+  background:#16834b;
+  color:white;
 }
 
-.add{
-width:100%;
-background:#222;
-color:white;
-margin-bottom:12px;
+.blue{
+  background:#1976d2;
+  color:white;
 }
 
-input,textarea,select{
-width:100%;
-padding:13px;
-margin-bottom:10px;
-border:1px solid #ccc;
-border-radius:10px;
-font-size:16px;
+.red{
+  background:#d93636;
+  color:white;
+}
+
+.gray{
+  background:#ddd;
+}
+
+.orange{
+  background:#f0a000;
+  color:white;
+}
+
+input,
+textarea,
+select{
+  width:100%;
+  padding:13px;
+  margin-bottom:12px;
+  border:1px solid #ccc;
+  border-radius:10px;
+  font-size:16px;
+  outline:none;
 }
 
 textarea{
-height:140px;
-resize:none;
-}
-
-.save{
-width:100%;
-background:#16834b;
-color:white;
-}
-
-.search{
-margin-top:5px;
+  min-height:150px;
+  resize:vertical;
 }
 
 .note{
-background:white;
-margin-top:15px;
-padding:15px;
-border-radius:13px;
-box-shadow:0 3px 10px #ccc;
+  background:white;
+  padding:16px;
+  border-radius:14px;
+  margin-top:12px;
+  box-shadow:0 3px 10px #ddd;
 }
 
-.note h3{margin-top:0}
+.note h3{
+  margin-top:0;
+  margin-bottom:8px;
+}
 
 .note p{
-white-space:pre-wrap;
+  white-space:pre-wrap;
+  line-height:1.5;
 }
 
-.category{
-display:inline-block;
-background:#eee;
-padding:5px 9px;
-border-radius:20px;
-font-size:12px;
-margin-bottom:8px;
+.note-info{
+  font-size:13px;
+  color:#777;
+  margin-bottom:10px;
 }
 
 .note-buttons{
-display:flex;
-flex-wrap:wrap;
-gap:6px;
-margin-top:10px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
 }
 
-.edit{background:#ddd}
-.delete{background:#d33;color:white}
-.favorite{background:#ffd84d}
-.share{background:#16834b;color:white}
-.restore{background:#16834b;color:white}
-
-.section{
-margin-top:18px;
-font-size:18px;
-font-weight:bold;
+#editor{
+  display:none;
 }
 
-#editor,#calculator,#bin{
-display:none;
+.empty{
+  text-align:center;
+  padding:30px;
+  color:#777;
 }
 
-#calculator{
-background:white;
-padding:15px;
-border-radius:15px;
-box-shadow:0 3px 10px #ccc;
+/* Calculator */
+
+.calculator{
+  background:#222;
+  padding:15px;
+  border-radius:18px;
 }
 
 .calc-display{
-height:55px;
-text-align:right;
-font-size:25px;
+  width:100%;
+  height:65px;
+  background:#111;
+  color:white;
+  border:0;
+  border-radius:10px;
+  padding:10px;
+  font-size:25px;
+  text-align:right;
+  margin-bottom:12px;
 }
 
-.calc-grid{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:7px;
+.calc-buttons{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
 }
 
-.calc-grid button{
-font-size:19px;
-background:#e5e5e5;
+.calc-buttons button{
+  height:58px;
+  font-size:20px;
+  background:#444;
+  color:white;
 }
 
-.operator{
-background:#222!important;
-color:white;
+.calc-buttons button.operator{
+  background:#1976d2;
 }
 
-.equal{
-background:#16834b!important;
-color:white;
+.calc-buttons button.equal{
+  background:#16834b;
 }
 
-.clear{
-background:#d33!important;
-color:white;
+.calc-buttons button.clear{
+  background:#d93636;
 }
+
+/* Settings */
+
+.setting-row{
+  padding:15px 0;
+  border-bottom:1px solid #ddd;
+}
+
+.setting-row:last-child{
+  border-bottom:0;
+}
+
+.setting-row h3{
+  margin:0 0 7px;
+}
+
+/* PIN */
 
 #pinScreen{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:#111;
-display:flex;
-align-items:center;
-justify-content:center;
-z-index:99999;
+  position:fixed;
+  inset:0;
+  background:#111;
+  color:white;
+  z-index:9999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
 }
 
 .pin-box{
-width:90%;
-max-width:380px;
-background:white;
-padding:30px 20px;
-border-radius:20px;
-text-align:center;
+  width:100%;
+  max-width:380px;
+  text-align:center;
+  background:#222;
+  padding:30px 20px;
+  border-radius:20px;
+}
+
+.pin-box h2{
+  margin-top:0;
 }
 
 .pin-input{
-text-align:center;
-letter-spacing:7px;
-font-size:25px;
-}
-
-.pin-button{
-width:100%;
-background:#16834b;
-color:white;
+  text-align:center;
+  letter-spacing:8px;
+  font-size:24px;
+  background:#333;
+  color:white;
+  border:1px solid #555;
 }
 
 .pin-error{
-color:#d33;
-min-height:25px;
-margin-bottom:8px;
+  color:#ff6666;
+  min-height:22px;
+  margin-bottom:8px;
 }
 
-.dark{
-background:#181818;
-color:white;
+.pin-button{
+  width:100%;
+  background:#16834b;
+  color:white;
 }
 
-.dark .note,
-.dark #calculator{
-background:#292929;
-color:white;
+/* Dark Mode */
+
+body.dark{
+  background:#181818;
+  color:white;
 }
 
-.dark input,
-.dark textarea,
-.dark select{
-background:#292929;
-color:white;
-border-color:#555;
+body.dark .card,
+body.dark .counter,
+body.dark .note,
+body.dark .nav button{
+  background:#292929;
+  color:white;
 }
 
-.dark .edit{
-background:#555;
-color:white;
+body.dark input,
+body.dark textarea,
+body.dark select{
+  background:#292929;
+  color:white;
+  border-color:#555;
 }
 
-.dark .category{
-background:#555;
-color:white;
+body.dark .note-info{
+  color:#bbb;
 }
 
-.dark header{background:#000}
+body.dark .setting-row{
+  border-color:#555;
+}
 
-.empty{
-text-align:center;
-padding:25px;
-opacity:.7;
+body.dark .gray{
+  background:#555;
+  color:white;
+}
+
+body.dark header{
+  background:#000;
+}
+
+/* Responsive */
+
+@media(max-width:480px){
+  .nav{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .dashboard{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .quick{
+    grid-template-columns:1fr;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<!-- PIN -->
-
+<!-- PIN SCREEN -->
 <div id="pinScreen">
-<div class="pin-box">
+  <div class="pin-box">
+    <h2>🔐 My Notes</h2>
 
-<h2>🔐 My Notes</h2>
+    <p id="pinMessage">
+      আপনার জন্য একটি 4–6 digit PIN তৈরি করুন
+    </p>
 
-<p id="pinMessage">
-আপনার জন্য একটি 4–6 digit PIN তৈরি করুন
-</p>
+    <input
+      id="pinInput"
+      class="pin-input"
+      type="password"
+      inputmode="numeric"
+      maxlength="6"
+      placeholder="••••••"
+    >
 
-<input
-id="pinInput"
-class="pin-input"
-type="password"
-inputmode="numeric"
-maxlength="6"
-placeholder="••••••">
+    <div class="pin-error" id="pinError"></div>
 
-<div class="pin-error" id="pinError"></div>
-
-<button class="pin-button" id="pinButton">
-🔓 Continue
-</button>
-
-</div>
+    <button class="pin-button" onclick="submitPIN()">
+      🔓 Continue
+    </button>
+  </div>
 </div>
 
 
 <header>
-
-<h1>📝 My Notes</h1>
-
-<button onclick="darkMode()">
-🌙 Dark Mode
-</button>
-
+  <h1>📝 My Notes</h1>
+  <p>আপনার নিজের Smart Notes App</p>
 </header>
 
 
-<div class="container">
+<div class="app">
 
-<div class="tools">
+  <!-- NAVIGATION -->
+  <div class="nav">
 
-<button class="tool" onclick="openCalculator()">
-🧮 Calculator
-</button>
+    <button id="navHome"
+            class="active"
+            onclick="showSection('home')">
+      🏠 Home
+    </button>
 
-<button class="tool" onclick="changePIN()">
-🔑 Change PIN
-</button>
+    <button id="navNotes"
+            onclick="showSection('notes')">
+      📝 Notes
+    </button>
 
-</div>
+    <button id="navCalculator"
+            onclick="showSection('calculator')">
+      🧮 Calculator
+    </button>
 
+    <button id="navBin"
+            onclick="showSection('bin')">
+      🗑️ Recycle Bin
+    </button>
 
-<!-- Calculator -->
+    <button id="navSettings"
+            onclick="showSection('settings')">
+      ⚙️ Settings
+    </button>
 
-<div id="calculator">
+    <button id="navAbout"
+            onclick="showSection('about')">
+      ℹ️ About
+    </button>
 
-<input
-id="calcDisplay"
-class="calc-display"
-type="text"
-readonly>
-
-<div class="calc-grid">
-
-<button class="clear" onclick="clearCalc()">C</button>
-<button onclick="backspace()">⌫</button>
-<button onclick="calcInput('%')">%</button>
-<button class="operator" onclick="calcInput('/')">÷</button>
-
-<button onclick="calcInput('7')">7</button>
-<button onclick="calcInput('8')">8</button>
-<button onclick="calcInput('9')">9</button>
-<button class="operator" onclick="calcInput('*')">×</button>
-
-<button onclick="calcInput('4')">4</button>
-<button onclick="calcInput('5')">5</button>
-<button onclick="calcInput('6')">6</button>
-<button class="operator" onclick="calcInput('-')">−</button>
-
-<button onclick="calcInput('1')">1</button>
-<button onclick="calcInput('2')">2</button>
-<button onclick="calcInput('3')">3</button>
-<button class="operator" onclick="calcInput('+')">+</button>
-
-<button onclick="calcInput('0')">0</button>
-<button onclick="calcInput('.')">.</button>
-
-<button
-class="equal"
-style="grid-column:span 2"
-onclick="calculate()">
-=
-</button>
-
-</div>
-</div>
+  </div>
 
 
-<!-- Add -->
+  <!-- HOME -->
+  <section id="homeSection" class="section active">
 
-<button class="add" onclick="openEditor()">
-➕ Add New Note
-</button>
-
-
-<!-- Editor -->
-
-<div id="editor">
-
-<input
-id="titleInput"
-type="text"
-placeholder="Note-এর Title লিখুন">
-
-<select id="categoryInput">
-
-<option value="Study">📚 Study</option>
-<option value="Personal">👤 Personal</option>
-<option value="Work">💼 Work</option>
-<option value="Important">⭐ Important</option>
-<option value="Other">📌 Other</option>
-
-</select>
-
-<textarea
-id="textInput"
-placeholder="আপনার Note লিখুন..."></textarea>
-
-<button class="save" onclick="saveNote()">
-💾 Save Note
-</button>
-
-</div>
+    <div class="card">
+      <h2>👋 Welcome to My Notes</h2>
+      <p>
+        আপনার Notes, Calculator এবং গুরুত্বপূর্ণ তথ্য
+        এক জায়গায় রাখুন।
+      </p>
+    </div>
 
 
-<!-- Search -->
+    <div class="dashboard">
 
-<input
-id="search"
-class="search"
-type="text"
-placeholder="🔍 Note খুঁজুন...">
+      <div class="counter">
+        <div class="number" id="totalCount">0</div>
+        <div>📝 Total Notes</div>
+      </div>
 
+      <div class="counter">
+        <div class="number" id="favoriteCount">0</div>
+        <div>⭐ Favorites</div>
+      </div>
 
-<!-- Categories -->
+      <div class="counter">
+        <div class="number" id="binCount">0</div>
+        <div>🗑️ Recycle Bin</div>
+      </div>
 
-<select id="filterCategory" onchange="showNotes()">
+      <div class="counter">
+        <div class="number" id="categoryCount">0</div>
+        <div>📁 Categories</div>
+      </div>
 
-<option value="All">📋 All Categories</option>
-<option value="Study">📚 Study</option>
-<option value="Personal">👤 Personal</option>
-<option value="Work">💼 Work</option>
-<option value="Important">⭐ Important</option>
-<option value="Other">📌 Other</option>
-
-</select>
-
-
-<div class="section">
-📝 My Notes
-</div>
-
-<div id="notes"></div>
+    </div>
 
 
-<!-- Recycle Bin -->
+    <div class="card">
+      <h2>⚡ Quick Actions</h2>
 
-<div class="section">
-🗑️ Recycle Bin
-</div>
+      <div class="quick">
 
-<div id="bin"></div>
+        <button class="primary"
+                onclick="openEditor()">
+          ➕ Add New Note
+        </button>
+
+        <button class="blue"
+                onclick="showSection('calculator')">
+          🧮 Calculator
+        </button>
+
+        <button class="orange"
+                onclick="showFavorites()">
+          ⭐ Favorite Notes
+        </button>
+
+        <button class="gray"
+                onclick="showSection('settings')">
+          ⚙️ Settings
+        </button>
+
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- NOTES -->
+  <section id="notesSection" class="section">
+
+    <div class="card">
+
+      <h2>📝 My Notes</h2>
+
+      <button class="primary"
+              style="width:100%;margin-bottom:12px"
+              onclick="openEditor()">
+        ➕ Add New Note
+      </button>
+
+      <input
+        id="search"
+        type="text"
+        placeholder="🔍 Note খুঁজুন..."
+        oninput="renderNotes()"
+      >
+
+      <select id="categoryFilter"
+              onchange="renderNotes()">
+
+        <option value="all">
+          📚 All Categories
+        </option>
+
+        <option value="Study">
+          📖 Study
+        </option>
+
+        <option value="Personal">
+          👤 Personal
+        </option>
+
+        <option value="Work">
+          💼 Work
+        </option>
+
+        <option value="Important">
+          ⭐ Important
+        </option>
+
+        <option value="Other">
+          📌 Other
+        </option>
+
+      </select>
+
+
+      <select id="favoriteFilter"
+              onchange="renderNotes()">
+
+        <option value="all">
+          📝 All Notes
+        </option>
+
+        <option value="favorite">
+          ⭐ Favorite Only
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <!-- NOTE EDITOR -->
+    <div id="editor" class="card">
+
+      <h2 id="editorTitle">
+        ✏️ New Note
+      </h2>
+
+      <input
+        id="titleInput"
+        type="text"
+        placeholder="📌 Note-এর Title"
+      >
+
+      <select id="noteCategory">
+
+        <option value="Study">
+          📖 Study
+        </option>
+
+        <option value="Personal">
+          👤 Personal
+        </option>
+
+        <option value="Work">
+          💼 Work
+        </option>
+
+        <option value="Important">
+          ⭐ Important
+        </option>
+
+        <option value="Other">
+          📌 Other
+        </option>
+
+      </select>
+
+      <textarea
+        id="textInput"
+        placeholder="✍️ আপনার Note লিখুন..."
+      ></textarea>
+
+      <button class="green"
+              style="width:100%;margin-bottom:8px"
+              onclick="saveNote()">
+        💾 Save Note
+      </button>
+
+      <button class="gray"
+              style="width:100%"
+              onclick="cancelEditor()">
+        ❌ Cancel
+      </button>
+
+    </div>
+
+
+    <div id="notes"></div>
+
+  </section>
+
+
+  <!-- CALCULATOR -->
+  <section id="calculatorSection" class="section">
+
+    <div class="card">
+
+      <h2>🧮 Calculator</h2>
+
+      <div class="calculator">
+
+        <input
+          id="calcDisplay"
+          class="calc-display"
+          type="text"
+          readonly
+          value="0"
+        >
+
+        <div class="calc-buttons">
+
+          <button class="clear"
+                  onclick="calcClear()">
+            C
+          </button>
+
+          <button onclick="calcBack()">
+            ⌫
+          </button>
+
+          <button class="operator"
+                  onclick="calcInput('%')">
+            %
+          </button>
+
+          <button class="operator"
+                  onclick="calcInput('/')">
+            ÷
+          </button>
+
+
+          <button onclick="calcInput('7')">
+            7
+          </button>
+
+          <button onclick="calcInput('8')">
+            8
+          </button>
+
+          <button onclick="calcInput('9')">
+            9
+          </button>
+
+          <button class="operator"
+                  onclick="calcInput('*')">
+            ×
+          </button>
+
+
+          <button onclick="calcInput('4')">
+            4
+          </button>
+
+          <button onclick="calcInput('5')">
+            5
+          </button>
+
+          <button onclick="calcInput('6')">
+            6
+          </button>
+
+          <button class="operator"
+                  onclick="calcInput('-')">
+            −
+          </button>
+
+
+          <button onclick="calcInput('1')">
+            1
+          </button>
+
+          <button onclick="calcInput('2')">
+            2
+          </button>
+
+          <button onclick="calcInput('3')">
+            3
+          </button>
+
+          <button class="operator"
+                  onclick="calcInput('+')">
+            +
+          </button>
+
+
+          <button onclick="calcInput('0')">
+            0
+          </button>
+
+          <button onclick="calcInput('.')">
+            .
+          </button>
+
+          <button class="equal"
+                  style="grid-column:span 2"
+                  onclick="calcResult()">
+            =
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- RECYCLE BIN -->
+  <section id="binSection" class="section">
+
+    <div class="card">
+
+      <h2>🗑️ Recycle Bin</h2>
+
+      <p>
+        Delete করা Notes এখানে থাকবে।
+      </p>
+
+      <button class="red"
+              onclick="emptyBin()">
+        🗑️ Empty Recycle Bin
+      </button>
+
+    </div>
+
+    <div id="binNotes"></div>
+
+  </section>
+
+
+  <!-- SETTINGS -->
+  <section id="settingsSection" class="section">
+
+    <div class="card">
+
+      <h2>⚙️ Settings</h2>
+
+
+      <div class="setting-row">
+
+        <h3>🎨 Theme / Appearance</h3>
+
+        <p>
+          App-এর Light অথবা Dark Mode নির্বাচন করুন।
+        </p>
+
+        <select id="themeSelect"
+                onchange="setTheme(this.value)">
+
+          <option value="system">
+            📱 System Default
+          </option>
+
+          <option value="light">
+            ☀️ Light Mode
+          </option>
+
+          <option value="dark">
+            🌙 Dark Mode
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <div class="setting-row">
+
+        <h3>💾 Backup Notes</h3>
+
+        <p>
+          আপনার Notes একটি JSON file হিসেবে Save করুন।
+        </p>
+
+        <button class="green"
+                onclick="downloadBackup()">
+          💾 Create Backup
+        </button>
+
+      </div>
+
+
+      <div class="setting-row">
+
+        <h3>📥 Restore Notes</h3>
+
+        <p>
+          আগের Backup file থেকে Notes ফিরিয়ে আনুন।
+        </p>
+
+        <button class="blue"
+                onclick="document.getElementById('restoreFile').click()">
+          📥 Restore Backup
+        </button>
+
+        <input
+          id="restoreFile"
+          type="file"
+          accept=".json,application/json"
+          style="display:none"
+          onchange="restoreBackup(event)"
+        >
+
+      </div>
+
+
+      <div class="setting-row">
+
+        <h3>🔐 PIN Settings</h3>
+
+        <p>
+          আপনার App-এর PIN পরিবর্তন করুন।
+        </p>
+
+        <button class="orange"
+                onclick="changePIN()">
+          🔑 Change PIN
+        </button>
+
+        <button class="gray"
+                onclick="lockApp()">
+          🔒 Lock App Now
+        </button>
+
+      </div>
+
+
+      <div class="setting-row">
+
+        <h3>🧹 App Data</h3>
+
+        <p>
+          ⚠️ এই অপশন ব্যবহার করলে সব Notes ও Recycle Bin
+          মুছে যাবে।
+        </p>
+
+        <button class="red"
+                onclick="clearAllData()">
+          🗑️ Clear All Data
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ABOUT -->
+  <section id="aboutSection" class="section">
+
+    <div class="card">
+
+      <h2>ℹ️ About My Notes</h2>
+
+      <p><b>📱 App Name:</b> My Notes</p>
+
+      <p><b>🚀 Version:</b> 4.0</p>
+
+      <p>
+        📝 Notes, 🧮 Calculator, ⭐ Favorites,
+        📁 Categories, 🔐 PIN Lock এবং আরও অনেক
+        Feature একসাথে।
+      </p>
+
+      <hr>
+
+      <h3>✨ Features</h3>
+
+      <p>🏠 Beautiful Home Screen</p>
+      <p>📝 Create & Edit Notes</p>
+      <p>⭐ Favorite Notes</p>
+      <p>📁 Note Categories</p>
+      <p>🗑️ Recycle Bin</p>
+      <p>♻️ Restore Deleted Notes</p>
+      <p>📤 Share Notes</p>
+      <p>🔍 Search Notes</p>
+      <p>🧮 Calculator</p>
+      <p>🔐 PIN Lock</p>
+      <p>🌙 Dark Mode</p>
+      <p>💾 Backup & Restore</p>
+
+      <hr>
+
+      <p>
+        ❤️ তৈরি করা হয়েছে ব্যক্তিগত Notes সহজে
+        সংরক্ষণ করার জন্য।
+      </p>
+
+    </div>
+
+  </section>
 
 </div>
 
 
 <script>
 
-/* =========================
-PIN
-========================= */
-
-const pinButton =
-document.getElementById("pinButton");
-
-const pinInput =
-document.getElementById("pinInput");
-
-const pinError =
-document.getElementById("pinError");
-
-function setupPIN(){
-
-const saved =
-localStorage.getItem("notesPIN");
-
-document.getElementById("pinMessage").innerText =
-saved
-? "আপনার PIN দিন"
-: "আপনার জন্য একটি 4–6 digit PIN তৈরি করুন";
-
-}
-
-
-function unlockApp(){
-
-document.getElementById("pinScreen").style.display="none";
-
-showNotes();
-
-showBin();
-
-}
-
-
-function submitPIN(){
-
-const pin =
-pinInput.value.trim();
-
-pinError.innerText="";
-
-if(!/^[0-9]{4,6}$/.test(pin)){
-
-pinError.innerText=
-"PIN অবশ্যই 4–6 সংখ্যার হতে হবে।";
-
-return;
-
-}
-
-const saved =
-localStorage.getItem("notesPIN");
-
-if(!saved){
-
-localStorage.setItem("notesPIN",pin);
-
-unlockApp();
-
-return;
-
-}
-
-if(pin===saved){
-
-unlockApp();
-
-}else{
-
-pinError.innerText=
-"❌ PIN সঠিক নয়।";
-
-pinInput.value="";
-
-}
-
-}
-
-
-pinButton.addEventListener(
-"click",
-submitPIN
-);
-
-pinInput.addEventListener(
-"keydown",
-function(e){
-
-if(e.key==="Enter")
-submitPIN();
-
-});
+let editIndex = -1;
 
 
 /* =========================
-NOTES
+   DATA FUNCTIONS
 ========================= */
 
-let editIndex=-1;
+function getNotes(){
+
+  let notes =
+    JSON.parse(localStorage.getItem("notes")) || [];
+
+  return notes.map(function(note){
+
+    return {
+      title: note.title || "",
+      text: note.text || "",
+      category: note.category || "Other",
+      favorite: note.favorite === true,
+      date: note.date || new Date().toLocaleString()
+    };
+
+  });
+}
 
 
-function openEditor(){
+function saveNotes(notes){
 
-document.getElementById("editor").style.display="block";
+  localStorage.setItem(
+    "notes",
+    JSON.stringify(notes)
+  );
 
-document.getElementById("titleInput").focus();
+}
+
+
+function getBin(){
+
+  return JSON.parse(
+    localStorage.getItem("bin")
+  ) || [];
+
+}
+
+
+function saveBin(bin){
+
+  localStorage.setItem(
+    "bin",
+    JSON.stringify(bin)
+  );
+
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function showSection(name){
+
+  let sections =
+    document.querySelectorAll(".section");
+
+  sections.forEach(function(section){
+
+    section.classList.remove("active");
+
+  });
+
+
+  let selected =
+    document.getElementById(name + "Section");
+
+  if(selected){
+    selected.classList.add("active");
+  }
+
+
+  let buttons =
+    document.querySelectorAll(".nav button");
+
+  buttons.forEach(function(button){
+
+    button.classList.remove("active");
+
+  });
+
+
+  let navButton =
+    document.getElementById("nav" +
+      name.charAt(0).toUpperCase() +
+      name.slice(1));
+
+  if(navButton){
+    navButton.classList.add("active");
+  }
+
+
+  if(name === "notes"){
+    renderNotes();
+  }
+
+  if(name === "bin"){
+    renderBin();
+  }
+
+  updateDashboard();
+
+  window.scrollTo(0,0);
+}
+
+
+/* =========================
+   DASHBOARD
+========================= */
+
+function updateDashboard(){
+
+  let notes = getNotes();
+
+  let bin = getBin();
+
+
+  document.getElementById(
+    "totalCount"
+  ).innerText = notes.length;
+
+
+  document.getElementById(
+    "favoriteCount"
+  ).innerText =
+    notes.filter(function(note){
+      return note.favorite;
+    }).length;
+
+
+  document.getElementById(
+    "binCount"
+  ).innerText = bin.length;
+
+
+  let categories = [];
+
+  notes.forEach(function(note){
+
+    if(!categories.includes(note.category)){
+      categories.push(note.category);
+    }
+
+  });
+
+
+  document.getElementById(
+    "categoryCount"
+  ).innerText = categories.length;
+
+}
+
+
+/* =========================
+   NOTE EDITOR
+========================= */
+
+function openEditor(index = -1){
+
+  editIndex = index;
+
+  let editor =
+    document.getElementById("editor");
+
+
+  editor.style.display = "block";
+
+
+  if(index === -1){
+
+    document.getElementById(
+      "editorTitle"
+    ).innerText = "✏️ New Note";
+
+    document.getElementById(
+      "titleInput"
+    ).value = "";
+
+    document.getElementById(
+      "textInput"
+    ).value = "";
+
+    document.getElementById(
+      "noteCategory"
+    ).value = "Study";
+
+  }
+
+  else{
+
+    let notes = getNotes();
+
+    let note = notes[index];
+
+
+    document.getElementById(
+      "editorTitle"
+    ).innerText = "✏️ Edit Note";
+
+
+    document.getElementById(
+      "titleInput"
+    ).value = note.title;
+
+
+    document.getElementById(
+      "textInput"
+    ).value = note.text;
+
+
+    document.getElementById(
+      "noteCategory"
+    ).value = note.category;
+
+  }
+
+
+  showSection("notes");
+
+
+  setTimeout(function(){
+
+    document.getElementById(
+      "titleInput"
+    ).focus();
+
+  },100);
+
+}
+
+
+function cancelEditor(){
+
+  editIndex = -1;
+
+  document.getElementById(
+    "editor"
+  ).style.display = "none";
 
 }
 
 
 function saveNote(){
 
-const title =
-document.getElementById("titleInput").value.trim();
+  let title =
+    document.getElementById(
+      "titleInput"
+    ).value.trim();
 
-const text =
-document.getElementById("textInput").value.trim();
 
-const category =
-document.getElementById("categoryInput").value;
+  let text =
+    document.getElementById(
+      "textInput"
+    ).value.trim();
 
-if(title==="" && text===""){
 
-alert("আগে Note লিখুন!");
+  let category =
+    document.getElementById(
+      "noteCategory"
+    ).value;
 
-return;
+
+  if(title === "" && text === ""){
+
+    alert("⚠️ আগে Note লিখুন!");
+
+    return;
+
+  }
+
+
+  let notes = getNotes();
+
+
+  if(editIndex === -1){
+
+    notes.push({
+
+      title:title,
+
+      text:text,
+
+      category:category,
+
+      favorite:false,
+
+      date:new Date().toLocaleString()
+
+    });
+
+  }
+
+  else{
+
+    notes[editIndex].title = title;
+
+    notes[editIndex].text = text;
+
+    notes[editIndex].category = category;
+
+    notes[editIndex].date =
+      new Date().toLocaleString();
+
+  }
+
+
+  saveNotes(notes);
+
+
+  cancelEditor();
+
+  renderNotes();
+
+  updateDashboard();
+
+
+  alert("✅ Note Save হয়েছে!");
 
 }
-
-let notes =
-JSON.parse(localStorage.getItem("notes")) || [];
-
-const note={
-
-title:title,
-
-text:text,
-
-category:category,
-
-favorite:false,
-
-date:new Date().toLocaleString("bn-BD")
-
-};
-
-if(editIndex===-1){
-
-notes.push(note);
-
-}else{
-
-note.favorite =
-notes[editIndex].favorite || false;
-
-notes[editIndex]=note;
-
-editIndex=-1;
-
-}
-
-localStorage.setItem(
-"notes",
-JSON.stringify(notes)
-);
-
-document.getElementById("titleInput").value="";
-
-document.getElementById("textInput").value="";
-
-document.getElementById("editor").style.display="none";
-
-showNotes();
-
-}
-
-
-function showNotes(){
-
-const notes =
-JSON.parse(localStorage.getItem("notes")) || [];
-
-const search =
-document.getElementById("search").value.toLowerCase();
-
-const filter =
-document.getElementById("filterCategory").value;
-
-const container =
-document.getElementById("notes");
-
-container.innerHTML="";
-
-let found=false;
-
-notes.forEach(function(note,index){
-
-const title =
-(note.title||"").toLowerCase();
-
-const text =
-(note.text||"").toLowerCase();
-
-if(
-(title.includes(search)||text.includes(search)) &&
-(filter==="All"||note.category===filter)
-){
-
-found=true;
-
-const div=document.createElement("div");
-
-div.className="note";
-
-const h3=document.createElement("h3");
-
-h3.innerText =
-(note.favorite?"⭐ ":"📌 ") +
-(note.title||"Untitled");
-
-const cat=document.createElement("span");
-
-cat.className="category";
-
-cat.innerText=note.category||"Other";
-
-const p=document.createElement("p");
-
-p.innerText=note.text||"";
-
-const small=document.createElement("small");
-
-small.innerText="🕒 "+(note.date||"");
-
-const buttons=document.createElement("div");
-
-buttons.className="note-buttons";
-
-
-const fav=document.createElement("button");
-
-fav.className="favorite";
-
-fav.innerText =
-note.favorite
-? "⭐ Unfavorite"
-: "☆ Favorite";
-
-fav.onclick=function(){
-
-toggleFavorite(index);
-
-};
-
-
-const edit=document.createElement("button");
-
-edit.className="edit";
-
-edit.innerText="✏️ Edit";
-
-edit.onclick=function(){
-
-editNote(index);
-
-};
-
-
-const share=document.createElement("button");
-
-share.className="share";
-
-share.innerText="📤 Share";
-
-share.onclick=function(){
-
-shareNote(index);
-
-};
-
-
-const del=document.createElement("button");
-
-del.className="delete";
-
-del.innerText="🗑️ Delete";
-
-del.onclick=function(){
-
-deleteNote(index);
-
-};
-
-
-buttons.appendChild(fav);
-
-buttons.appendChild(edit);
-
-buttons.appendChild(share);
-
-buttons.appendChild(del);
-
-div.appendChild(h3);
-
-div.appendChild(cat);
-
-div.appendChild(p);
-
-div.appendChild(small);
-
-div.appendChild(buttons);
-
-container.appendChild(div);
-
-}
-
-});
-
-if(!found){
-
-container.innerHTML=
-'<div class="empty">কোনো Note পাওয়া যায়নি।</div>';
-
-}
-
-}
-
-
-document.getElementById("search")
-.addEventListener("input",showNotes);
 
 
 /* =========================
-FAVORITE
+   RENDER NOTES
+========================= */
+
+function renderNotes(){
+
+  let notes = getNotes();
+
+  let search =
+    document.getElementById(
+      "search"
+    ).value.toLowerCase();
+
+
+  let category =
+    document.getElementById(
+      "categoryFilter"
+    ).value;
+
+
+  let favorite =
+    document.getElementById(
+      "favoriteFilter"
+    ).value;
+
+
+  let container =
+    document.getElementById(
+      "notes"
+    );
+
+
+  container.innerHTML = "";
+
+
+  let found = 0;
+
+
+  notes.forEach(function(note,index){
+
+    let title =
+      note.title.toLowerCase();
+
+    let text =
+      note.text.toLowerCase();
+
+
+    if(
+      !title.includes(search) &&
+      !text.includes(search)
+    ){
+      return;
+    }
+
+
+    if(
+      category !== "all" &&
+      note.category !== category
+    ){
+      return;
+    }
+
+
+    if(
+      favorite === "favorite" &&
+      !note.favorite
+    ){
+      return;
+    }
+
+
+    found++;
+
+
+    let div =
+      document.createElement("div");
+
+    div.className = "note";
+
+
+    let h3 =
+      document.createElement("h3");
+
+    h3.innerText =
+      (note.favorite ? "⭐ " : "📌 ") +
+      (note.title || "Untitled Note");
+
+
+    let info =
+      document.createElement("div");
+
+    info.className = "note-info";
+
+    info.innerText =
+      "📁 " + note.category +
+      " • 🕒 " + note.date;
+
+
+    let p =
+      document.createElement("p");
+
+    p.innerText =
+      note.text;
+
+
+    let buttons =
+      document.createElement("div");
+
+    buttons.className =
+      "note-buttons";
+
+
+    let favButton =
+      document.createElement("button");
+
+    favButton.className =
+      note.favorite ? "orange" : "gray";
+
+    favButton.innerText =
+      note.favorite
+      ? "⭐ Unfavorite"
+      : "☆ Favorite";
+
+    favButton.onclick =
+      function(){
+        toggleFavorite(index);
+      };
+
+
+    let editButton =
+      document.createElement("button");
+
+    editButton.className =
+      "blue";
+
+    editButton.innerText =
+      "✏️ Edit";
+
+    editButton.onclick =
+      function(){
+        openEditor(index);
+      };
+
+
+    let shareButton =
+      document.createElement("button");
+
+    shareButton.className =
+      "green";
+
+    shareButton.innerText =
+      "📤 Share";
+
+    shareButton.onclick =
+      function(){
+        shareNote(index);
+      };
+
+
+    let deleteButton =
+      document.createElement("button");
+
+    deleteButton.className =
+      "red";
+
+    deleteButton.innerText =
+      "🗑️ Delete";
+
+    deleteButton.onclick =
+      function(){
+        deleteNote(index);
+      };
+
+
+    buttons.appendChild(favButton);
+
+    buttons.appendChild(editButton);
+
+    buttons.appendChild(shareButton);
+
+    buttons.appendChild(deleteButton);
+
+
+    div.appendChild(h3);
+
+    div.appendChild(info);
+
+    div.appendChild(p);
+
+    div.appendChild(buttons);
+
+
+    container.appendChild(div);
+
+  });
+
+
+  if(found === 0){
+
+    container.innerHTML =
+      '<div class="empty">' +
+      '📭 কোনো Note পাওয়া যায়নি।' +
+      '</div>';
+
+  }
+
+
+  updateDashboard();
+
+}
+
+
+/* =========================
+   FAVORITE
 ========================= */
 
 function toggleFavorite(index){
 
-let notes =
-JSON.parse(localStorage.getItem("notes")) || [];
+  let notes = getNotes();
 
-notes[index].favorite =
-!notes[index].favorite;
+  notes[index].favorite =
+    !notes[index].favorite;
 
-localStorage.setItem(
-"notes",
-JSON.stringify(notes)
-);
+  saveNotes(notes);
 
-showNotes();
+  renderNotes();
+
+  updateDashboard();
+
+}
+
+
+function showFavorites(){
+
+  showSection("notes");
+
+  document.getElementById(
+    "favoriteFilter"
+  ).value = "favorite";
+
+  renderNotes();
 
 }
 
 
 /* =========================
-EDIT
-========================= */
-
-function editNote(index){
-
-const notes =
-JSON.parse(localStorage.getItem("notes")) || [];
-
-document.getElementById("titleInput").value =
-notes[index].title||"";
-
-document.getElementById("textInput").value =
-notes[index].text||"";
-
-document.getElementById("categoryInput").value =
-notes[index].category||"Other";
-
-editIndex=index;
-
-document.getElementById("editor").style.display="block";
-
-window.scrollTo(0,0);
-
-}
-
-
-/* =========================
-DELETE / RECYCLE BIN
+   DELETE
 ========================= */
 
 function deleteNote(index){
 
-if(!confirm("Note Recycle Bin-এ পাঠাবেন?"))
-return;
-
-let notes =
-JSON.parse(localStorage.getItem("notes")) || [];
-
-let bin =
-JSON.parse(localStorage.getItem("bin")) || [];
-
-const deleted=notes.splice(index,1)[0];
-
-deleted.deletedAt =
-new Date().toLocaleString("bn-BD");
-
-bin.push(deleted);
-
-localStorage.setItem(
-"notes",
-JSON.stringify(notes)
-);
-
-localStorage.setItem(
-"bin",
-JSON.stringify(bin)
-);
-
-showNotes();
-
-showBin();
-
-}
+  if(
+    !confirm(
+      "🗑️ এই Note Recycle Bin-এ পাঠাবেন?"
+    )
+  ){
+    return;
+  }
 
 
-function showBin(){
+  let notes = getNotes();
 
-const bin =
-JSON.parse(localStorage.getItem("bin")) || [];
+  let bin = getBin();
 
-const container =
-document.getElementById("bin");
 
-container.innerHTML="";
+  let deleted =
+    notes.splice(index,1)[0];
 
-if(bin.length===0){
 
-container.innerHTML=
-'<div class="empty">Recycle Bin খালি।</div>';
+  deleted.deletedDate =
+    new Date().toLocaleString();
 
-return;
+
+  bin.push(deleted);
+
+
+  saveNotes(notes);
+
+  saveBin(bin);
+
+
+  renderNotes();
+
+  updateDashboard();
+
+
+  alert(
+    "🗑️ Note Recycle Bin-এ গেছে!"
+  );
 
 }
 
-bin.forEach(function(note,index){
 
-const div=document.createElement("div");
+/* =========================
+   RECYCLE BIN
+========================= */
 
-div.className="note";
+function renderBin(){
 
-const h3=document.createElement("h3");
+  let bin = getBin();
 
-h3.innerText="🗑️ "+(note.title||"Untitled");
-
-const p=document.createElement("p");
-
-p.innerText=note.text||"";
-
-const restore=document.createElement("button");
-
-restore.className="restore";
-
-restore.innerText="♻️ Restore";
-
-restore.onclick=function(){
-
-restoreNote(index);
-
-};
+  let container =
+    document.getElementById(
+      "binNotes"
+    );
 
 
-const permanent=document.createElement("button");
-
-permanent.className="delete";
-
-permanent.innerText="❌ Delete Forever";
-
-permanent.style.marginLeft="6px";
-
-permanent.onclick=function(){
-
-deleteForever(index);
-
-};
+  container.innerHTML = "";
 
 
-div.appendChild(h3);
+  if(bin.length === 0){
 
-div.appendChild(p);
+    container.innerHTML =
+      '<div class="empty">' +
+      '🗑️ Recycle Bin খালি।' +
+      '</div>';
 
-div.appendChild(restore);
+    return;
 
-div.appendChild(permanent);
+  }
 
-container.appendChild(div);
 
-});
+  bin.forEach(function(note,index){
+
+    let div =
+      document.createElement("div");
+
+    div.className = "note";
+
+
+    let h3 =
+      document.createElement("h3");
+
+    h3.innerText =
+      "🗑️ " +
+      (note.title || "Untitled Note");
+
+
+    let p =
+      document.createElement("p");
+
+    p.innerText =
+      note.text;
+
+
+    let info =
+      document.createElement("div");
+
+    info.className =
+      "note-info";
+
+    info.innerText =
+      "📁 " + note.category +
+      " • 🕒 Deleted: " +
+      (note.deletedDate || "");
+
+
+    let restore =
+      document.createElement("button");
+
+    restore.className = "green";
+
+    restore.innerText =
+      "♻️ Restore";
+
+    restore.onclick =
+      function(){
+        restoreNote(index);
+      };
+
+
+    let forever =
+      document.createElement("button");
+
+    forever.className = "red";
+
+    forever.innerText =
+      "❌ Delete Forever";
+
+    forever.onclick =
+      function(){
+        deleteForever(index);
+      };
+
+
+    div.appendChild(h3);
+
+    div.appendChild(info);
+
+    div.appendChild(p);
+
+    div.appendChild(restore);
+
+    div.appendChild(forever);
+
+
+    container.appendChild(div);
+
+  });
 
 }
 
 
 function restoreNote(index){
 
-let bin =
-JSON.parse(localStorage.getItem("bin")) || [];
+  let bin = getBin();
 
-let notes =
-JSON.parse(localStorage.getItem("notes")) || [];
+  let notes = getNotes();
 
-const note=bin.splice(index,1)[0];
 
-delete note.deletedAt;
+  let restored =
+    bin.splice(index,1)[0];
 
-notes.push(note);
 
-localStorage.setItem(
-"notes",
-JSON.stringify(notes)
-);
+  delete restored.deletedDate;
 
-localStorage.setItem(
-"bin",
-JSON.stringify(bin)
-);
 
-showNotes();
+  notes.push(restored);
 
-showBin();
+
+  saveBin(bin);
+
+  saveNotes(notes);
+
+
+  renderBin();
+
+  updateDashboard();
+
+
+  alert(
+    "♻️ Note Restore হয়েছে!"
+  );
 
 }
 
 
 function deleteForever(index){
 
-if(!confirm("এই Note চিরতরে Delete করবেন?"))
-return;
+  if(
+    !confirm(
+      "❌ এই Note চিরতরে Delete করবেন?"
+    )
+  ){
+    return;
+  }
 
-let bin =
-JSON.parse(localStorage.getItem("bin")) || [];
 
-bin.splice(index,1);
+  let bin = getBin();
 
-localStorage.setItem(
-"bin",
-JSON.stringify(bin)
-);
+  bin.splice(index,1);
 
-showBin();
+  saveBin(bin);
+
+
+  renderBin();
+
+  updateDashboard();
+
+}
+
+
+function emptyBin(){
+
+  let bin = getBin();
+
+
+  if(bin.length === 0){
+
+    alert(
+      "🗑️ Recycle Bin আগে থেকেই খালি।"
+    );
+
+    return;
+
+  }
+
+
+  if(
+    !confirm(
+      "⚠️ Recycle Bin-এর সব Note চিরতরে Delete করবেন?"
+    )
+  ){
+    return;
+  }
+
+
+  localStorage.setItem(
+    "bin",
+    JSON.stringify([])
+  );
+
+
+  renderBin();
+
+  updateDashboard();
 
 }
 
 
 /* =========================
-SHARE
+   SHARE
 ========================= */
 
 function shareNote(index){
 
-const notes =
-JSON.parse(localStorage.getItem("notes")) || [];
+  let notes = getNotes();
 
-const note=notes[index];
-
-const text =
-"📝 "+(note.title||"My Note")+
-"\n\n"+(note.text||"");
-
-if(navigator.share){
-
-navigator.share({
-
-title:note.title||"My Note",
-
-text:text
-
-}).catch(function(){});
-
-}else{
-
-navigator.clipboard.writeText(text);
-
-alert("Note কপি হয়েছে। এখন যেখানে চান Paste করুন।");
-
-}
-
-}
+  let note = notes[index];
 
 
-/* =========================
-DARK MODE
-========================= */
+  let content =
+    "📝 " +
+    note.title +
+    "\n\n" +
+    note.text;
 
-function darkMode(){
 
-document.body.classList.toggle("dark");
+  if(
+    navigator.share
+  ){
 
-localStorage.setItem(
-"darkMode",
-document.body.classList.contains("dark")
-);
+    navigator.share({
 
-}
+      title:note.title || "My Notes",
 
-if(
-localStorage.getItem("darkMode")==="true"
-){
+      text:content
 
-document.body.classList.add("dark");
+    }).catch(function(){});
+
+  }
+
+  else if(
+    navigator.clipboard
+  ){
+
+    navigator.clipboard.writeText(
+      content
+    ).then(function(){
+
+      alert(
+        "📋 Note copy হয়েছে!"
+      );
+
+    });
+
+  }
+
+  else{
+
+    alert(content);
+
+  }
 
 }
 
 
 /* =========================
-CALCULATOR
+   CALCULATOR
 ========================= */
-
-function openCalculator(){
-
-const c =
-document.getElementById("calculator");
-
-c.style.display =
-c.style.display==="block"
-? "none"
-: "block";
-
-}
-
 
 function calcInput(value){
 
-document.getElementById("calcDisplay")
-.value += value;
+  let display =
+    document.getElementById(
+      "calcDisplay"
+    );
+
+
+  if(display.value === "0"){
+
+    display.value = "";
+
+  }
+
+
+  display.value += value;
 
 }
 
 
-function clearCalc(){
+function calcClear(){
 
-document.getElementById("calcDisplay")
-.value="";
-
-}
-
-
-function backspace(){
-
-const d =
-document.getElementById("calcDisplay");
-
-d.value=d.value.slice(0,-1);
+  document.getElementById(
+    "calcDisplay"
+  ).value = "0";
 
 }
 
 
-function calculate(){
+function calcBack(){
 
-const d =
-document.getElementById("calcDisplay");
+  let display =
+    document.getElementById(
+      "calcDisplay"
+    );
 
-const expression=d.value;
 
-if(!expression)return;
+  display.value =
+    display.value.slice(0,-1);
 
-if(!/^[0-9+\-*/%.() ]+$/.test(expression)){
 
-d.value="Error";
+  if(display.value === ""){
 
-return;
+    display.value = "0";
 
-}
-
-try{
-
-const result =
-Function(
-'"use strict"; return ('+
-expression+
-')'
-)();
-
-d.value=result;
-
-}catch(e){
-
-d.value="Error";
+  }
 
 }
+
+
+function calcResult(){
+
+  let display =
+    document.getElementById(
+      "calcDisplay"
+    );
+
+
+  let expression =
+    display.value;
+
+
+  if(!/^[0-9+\-*/%.() ]+$/.test(expression)){
+
+    display.value = "Error";
+
+    return;
+
+  }
+
+
+  try{
+
+    let result =
+      Function(
+        '"use strict"; return (' +
+        expression +
+        ')'
+      )();
+
+
+    if(
+      !Number.isFinite(result)
+    ){
+
+      display.value = "Error";
+
+      return;
+
+    }
+
+
+    display.value =
+      String(result);
+
+  }
+
+  catch(error){
+
+    display.value = "Error";
+
+  }
 
 }
 
 
 /* =========================
-CHANGE PIN
+   THEME
 ========================= */
+
+function applyTheme(){
+
+  let theme =
+    localStorage.getItem(
+      "themeMode"
+    );
+
+
+  if(!theme){
+
+    let oldDark =
+      localStorage.getItem(
+        "darkMode"
+      ) === "true";
+
+
+    theme =
+      oldDark
+      ? "dark"
+      : "light";
+
+  }
+
+
+  document.getElementById(
+    "themeSelect"
+  ).value = theme;
+
+
+  if(theme === "dark"){
+
+    document.body.classList.add(
+      "dark"
+    );
+
+  }
+
+  else if(theme === "light"){
+
+    document.body.classList.remove(
+      "dark"
+    );
+
+  }
+
+  else{
+
+    if(
+      window.matchMedia &&
+      window.matchMedia(
+        "(prefers-color-scheme: dark)"
+      ).matches
+    ){
+
+      document.body.classList.add(
+        "dark"
+      );
+
+    }
+
+    else{
+
+      document.body.classList.remove(
+        "dark"
+      );
+
+    }
+
+  }
+
+
+  localStorage.setItem(
+    "themeMode",
+    theme
+  );
+
+
+  localStorage.setItem(
+    "darkMode",
+    theme === "dark"
+  );
+
+}
+
+
+function setTheme(theme){
+
+  localStorage.setItem(
+    "themeMode",
+    theme
+  );
+
+
+  localStorage.setItem(
+    "darkMode",
+    theme === "dark"
+  );
+
+
+  applyTheme();
+
+}
+
+
+/* =========================
+   PIN SYSTEM
+========================= */
+
+function setupPIN(){
+
+  let savedPIN =
+    localStorage.getItem(
+      "notesPIN"
+    );
+
+
+  let message =
+    document.getElementById(
+      "pinMessage"
+    );
+
+
+  if(savedPIN){
+
+    message.innerText =
+      "🔐 আপনার PIN দিন";
+
+  }
+
+  else{
+
+    message.innerText =
+      "🔐 আপনার জন্য একটি 4–6 digit PIN তৈরি করুন";
+
+  }
+
+}
+
+
+function submitPIN(){
+
+  let input =
+    document.getElementById(
+      "pinInput"
+    ).value.trim();
+
+
+  let error =
+    document.getElementById(
+      "pinError"
+    );
+
+
+  if(
+    !/^[0-9]{4,6}$/.test(input)
+  ){
+
+    error.innerText =
+      "⚠️ PIN অবশ্যই 4–6 সংখ্যার হতে হবে।";
+
+    return;
+
+  }
+
+
+  let savedPIN =
+    localStorage.getItem(
+      "notesPIN"
+    );
+
+
+  if(!savedPIN){
+
+    localStorage.setItem(
+      "notesPIN",
+      input
+    );
+
+
+    unlockApp();
+
+    return;
+
+  }
+
+
+  if(input === savedPIN){
+
+    unlockApp();
+
+  }
+
+  else{
+
+    error.innerText =
+      "❌ PIN সঠিক নয়।";
+
+
+    document.getElementById(
+      "pinInput"
+    ).value = "";
+
+  }
+
+}
+
+
+function unlockApp(){
+
+  document.getElementById(
+    "pinScreen"
+  ).style.display = "none";
+
+
+  document.getElementById(
+    "pinInput"
+  ).value = "";
+
+
+  document.getElementById(
+    "pinError"
+  ).innerText = "";
+
+
+  showSection("home");
+
+}
+
+
+function lockApp(){
+
+  document.getElementById(
+    "pinScreen"
+  ).style.display = "flex";
+
+
+  document.getElementById(
+    "pinInput"
+  ).value = "";
+
+
+  document.getElementById(
+    "pinError"
+  ).innerText = "";
+
+
+  setupPIN();
+
+}
+
 
 function changePIN(){
 
-const oldPIN =
-localStorage.getItem("notesPIN");
+  let savedPIN =
+    localStorage.getItem(
+      "notesPIN"
+    );
 
-const current =
-prompt("বর্তমান PIN লিখুন");
 
-if(current!==oldPIN){
+  if(!savedPIN){
 
-alert("❌ PIN সঠিক নয়।");
+    alert(
+      "⚠️ এখনো PIN তৈরি করা হয়নি।"
+    );
 
-return;
+    return;
+
+  }
+
+
+  let current =
+    prompt(
+      "🔐 বর্তমান PIN দিন:"
+    );
+
+
+  if(current !== savedPIN){
+
+    alert(
+      "❌ বর্তমান PIN সঠিক নয়।"
+    );
+
+    return;
+
+  }
+
+
+  let newPIN =
+    prompt(
+      "🔑 নতুন 4–6 digit PIN দিন:"
+    );
+
+
+  if(
+    !newPIN ||
+    !/^[0-9]{4,6}$/.test(
+      newPIN
+    )
+  ){
+
+    alert(
+      "⚠️ PIN অবশ্যই 4–6 সংখ্যার হতে হবে।"
+    );
+
+    return;
+
+  }
+
+
+  localStorage.setItem(
+    "notesPIN",
+    newPIN
+  );
+
+
+  alert(
+    "✅ PIN সফলভাবে পরিবর্তন হয়েছে!"
+  );
 
 }
 
-const newPIN =
-prompt("নতুন 4–6 সংখ্যার PIN দিন");
 
-if(!/^[0-9]{4,6}$/.test(newPIN)){
+/* =========================
+   BACKUP
+========================= */
 
-alert(
-"PIN অবশ্যই 4–6 সংখ্যার হতে হবে।"
-);
+function downloadBackup(){
 
-return;
+  let backup = {
+
+    version:"4.0",
+
+    exportedAt:
+      new Date().toISOString(),
+
+    notes:getNotes(),
+
+    bin:getBin(),
+
+    themeMode:
+      localStorage.getItem(
+        "themeMode"
+      ) || "light"
+
+  };
+
+
+  let json =
+    JSON.stringify(
+      backup,
+      null,
+      2
+    );
+
+
+  let blob =
+    new Blob(
+      [json],
+      {
+        type:"application/json"
+      }
+    );
+
+
+  let url =
+    URL.createObjectURL(blob);
+
+
+  let a =
+    document.createElement("a");
+
+
+  a.href = url;
+
+  a.download =
+    "My-Notes-Backup.json";
+
+
+  document.body.appendChild(a);
+
+  a.click();
+
+  document.body.removeChild(a);
+
+
+  URL.revokeObjectURL(url);
+
+
+  alert(
+    "💾 Backup তৈরি হয়েছে!"
+  );
 
 }
 
-localStorage.setItem(
-"notesPIN",
-newPIN
-);
 
-alert(
-"✅ PIN সফলভাবে পরিবর্তন হয়েছে।"
-);
+/* =========================
+   RESTORE
+========================= */
+
+function restoreBackup(event){
+
+  let file =
+    event.target.files[0];
+
+
+  if(!file){
+    return;
+  }
+
+
+  let reader =
+    new FileReader();
+
+
+  reader.onload =
+    function(e){
+
+      try{
+
+        let data =
+          JSON.parse(
+            e.target.result
+          );
+
+
+        if(
+          !Array.isArray(
+            data.notes
+          )
+        ){
+
+          throw new Error(
+            "Invalid backup"
+          );
+
+        }
+
+
+        if(
+          !confirm(
+            "⚠️ Restore করলে বর্তমান Notes replace হবে। Continue করবেন?"
+          )
+        ){
+
+          event.target.value = "";
+
+          return;
+
+        }
+
+
+        let notes =
+          data.notes.map(
+            function(note){
+
+              return {
+
+                title:
+                  note.title || "",
+
+                text:
+                  note.text || "",
+
+                category:
+                  note.category || "Other",
+
+                favorite:
+                  note.favorite === true,
+
+                date:
+                  note.date ||
+                  new Date().toLocaleString()
+
+              };
+
+            }
+          );
+
+
+        let bin =
+          Array.isArray(data.bin)
+          ? data.bin
+          : [];
+
+
+        saveNotes(notes);
+
+        saveBin(bin);
+
+
+        if(data.themeMode){
+
+          localStorage.setItem(
+            "themeMode",
+            data.themeMode
+          );
+
+          applyTheme();
+
+        }
+
+
+        renderNotes();
+
+        renderBin();
+
+        updateDashboard();
+
+
+        alert(
+          "✅ Backup Restore সফল হয়েছে!"
+        );
+
+      }
+
+      catch(error){
+
+        alert(
+          "❌ Backup file সঠিক নয়।"
+        );
+
+      }
+
+
+      event.target.value = "";
+
+    };
+
+
+  reader.readAsText(file);
 
 }
 
 
-/* START */
+/* =========================
+   CLEAR DATA
+========================= */
+
+function clearAllData(){
+
+  if(
+    !confirm(
+      "⚠️ সব Notes, Favorites এবং Recycle Bin মুছে যাবে। Continue করবেন?"
+    )
+  ){
+    return;
+  }
+
+
+  localStorage.removeItem(
+    "notes"
+  );
+
+
+  localStorage.removeItem(
+    "bin"
+  );
+
+
+  renderNotes();
+
+  renderBin();
+
+  updateDashboard();
+
+
+  alert(
+    "🗑️ সব Notes মুছে দেওয়া হয়েছে।"
+  );
+
+}
+
+
+/* =========================
+   SYSTEM START
+========================= */
+
+applyTheme();
 
 setupPIN();
 
-showNotes();
+updateDashboard();
 
-showBin();
+showSection("home");
 
 </script>
 
